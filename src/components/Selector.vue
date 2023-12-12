@@ -7,7 +7,7 @@
 <template>
   <div>
     <div class="text-18 font-600 mt-4">
-	    <el-select v-model="bookRef" placeholder="Select" @change="handleBook($event)" v-on:Change="setRefData" class="mr-2" style="width: 115px">
+	    <el-select v-model="bookRef" placeholder="Select" @change="handleBook($event)" v-on:Change="setRefData" class="mr-2" style="width: 135px">
 	      <el-option v-for="book in getBooks()" :label="book" :value="book" />
 	    </el-select>
 	    <el-select v-model="chapterRef" placeholder="Select" v-on:Change="setRefData" class="mr-2" style="width: 75px">
