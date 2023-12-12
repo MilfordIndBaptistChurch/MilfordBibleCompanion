@@ -49,4 +49,5 @@ Distributed under the MIT License.
 
 ### Contact
 Email: jamess.developer+mibc@gmail.com
+
 Project URL: https://github.com/MilfordIndBaptistChurch/MilfordBibleCompanion
