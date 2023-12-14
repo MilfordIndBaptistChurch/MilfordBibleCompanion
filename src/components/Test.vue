@@ -1,5 +1,5 @@
 <template>
-  {{count}} {{name}} {{msg}}
+  <!-- {{count}} {{name}} {{msg}} -->
 </template>
 
 <script lang="ts">
