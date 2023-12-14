@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	defineProps<{
-	  data: array
+	  data: Array<String>
 	}>()
 </script>
 
@@ -30,20 +30,24 @@
 		getDefault,
 		getObjKeys
 	} from '../common/utils';
-	const bookRef = ref('');
-	const chapterRef = ref('');
-	const verseRef = ref('');
+	const bookRef = ref();
+	const chapterRef = ref();
+	const verseRef = ref();
 	export default {
 		props: ['data'],
 		data: () => {
 			return {
-					default: {},
-					newModel: []
+					default: {
+						book: Array<any>,
+						chapter: Array<any>,
+						verse: Array<any>
+					},
+					newModel: [] as { book: any; chapters: { [x: number]: any[]; }; }[]
 				};
 		},
 		methods: {
 			hydrateData() {
-				let newModel = [];
+				let newModel = [] as { book: any; chapters: { [x: number]: any[]; }; }[];
 				for (const prop in this.data) {
 					const ref = getRef(this.data[prop]);
 					const book = ref.book;
@@ -59,28 +63,30 @@
 						});
 					} else if (JSON.stringify(newModel).indexOf(book) > -1) {
 						for(const prop in newModel) {
-							const bookIndex = newModel[prop];
-							if (bookIndex.book === book) { // book exist
-								if (Number(getObjKeys(bookIndex.chapters)[0]) === chapter) { // chapter exist
-									for (const verseIndex in bookIndex.chapters[chapter]) {
-										if (bookIndex.chapters[chapter][verseIndex] !== verse) {
-											bookIndex.chapters[chapter].push(verse);
+							const bookObject = newModel[prop];
+							if (bookObject.book === book) { // book exist
+								if (Number(getObjKeys(bookObject.chapters)[0]) === chapter) { // chapter exist
+									for (const verseIndex in bookObject.chapters[chapter]) {
+										if (bookObject.chapters[chapter][verseIndex] !== verse) {
+											bookObject.chapters[chapter].push(verse);
 										}
 									}
 								} else { // chapter doesn't exist
-									newModel[bookIndex].chapters[chapter] = [verse];
+									bookObject.chapters[chapter] = [verse];
 								}
 							}
 						}
 					}
 				}
 				this.newModel = newModel;
-				this.default = getDefault(newModel);
-				bookRef.value = this.default.book;
-				chapterRef.value = this.default.chapter;
-				verseRef.value = this.default.verse;
+				// this.default.book = getDefault(newModel).book;
+				// this.default.chapter = getDefault(newModel).chapter;
+				// this.default.verse = getDefault(newModel).verse;
+				bookRef.value = getDefault(newModel).book;
+				chapterRef.value = getDefault(newModel).chapter;
+				verseRef.value = getDefault(newModel).verse;
 			},
-	    handleBook(book) {
+	    handleBook(book:string) {
 	      bookRef.value = book;
 				chapterRef.value = this.getChapters()[0];
 				verseRef.value = this.getVerses()[0];
@@ -109,8 +115,8 @@
 	    	for (const prop in this.newModel) {
 	    		const bookIndex = this.newModel[prop];
 	    		if (bookRef.value === bookIndex.book) {
-	    			for (const index in bookIndex.chapters[getObjKeys(bookIndex.chapters)[0]]) {
-	    				verses.push(bookIndex.chapters[getObjKeys(bookIndex.chapters)[0]][index]);
+	    			for (const index in bookIndex.chapters[Number(getObjKeys(bookIndex.chapters)[0])]) {
+	    				verses.push(bookIndex.chapters[Number(getObjKeys(bookIndex.chapters)[0])][Number(index)]);
 	    			}
 	    		}
 	    	}

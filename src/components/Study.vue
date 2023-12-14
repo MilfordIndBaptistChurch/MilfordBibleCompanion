@@ -1,8 +1,7 @@
 <script setup lang="ts">
 	defineProps<{
-	  value: string,
     highlight: string,
-    methods: object
+    methods: Array<String>
 	}>()
 </script>
 

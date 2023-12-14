@@ -12,7 +12,7 @@
     </span>
     <span class="text-12 font-600 mr-1 badge-text">
         <span v-if="type.includes('typescript')">TypeScript</span>
-        <span v-else>VueJS</span>
+        <span v-else>VueJS 3</span>
     </span>
   </div>
 </template>
