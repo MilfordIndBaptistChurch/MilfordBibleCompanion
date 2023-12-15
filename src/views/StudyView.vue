@@ -2,59 +2,82 @@
 	import Selector from '../components/Selector.vue';
 	import Study from '../components/Study.vue';
   import Test from '../components/Test.vue';
+  import studyData from '../common/data.json';
 </script>
 
 <template>
   <main>
-  	<Selector v-bind:data="getData()" v-on:set-ref-data="updateTopLevelRef" />
-    <div v-for="refObj in getData()">
-    	<div v-for="(value, prop) in getDataObjItem(refObj)">
-        <div v-if="Array.isArray(value)" v-for="item in value">
-          <Study v-bind:highlight="item.highlight" v-bind:methods="item.methods" />
+  	<Selector v-bind:data="getStudyData()" v-on:set-ref-data="updateTopLevelRef" />
+    <div v-for="refObj in getStudyData()">
+        <div v-for="item in refObj[selectedRef as keyof typeof refObj]">
+          <Study v-if="Array.isArray(item)" v-bind:highlight="item[0].highlight" v-bind:methods="item[0].methods" />
           <Test msg="hello world" name="Hello world" />
         </div>
-    	</div>
   	</div>
   </main>
 </template>
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import data from '../common/data.json';
-  const selectedRef = ref(Object.keys(data[0])[0]);
+  import { getRef } from '../common/utils';
+
+  const selectedRef = ref(Object.keys(studyData[0])[0]);
+
+  interface IChapter {
+    chapter: number,
+    verses: [number]
+  }
 
   interface Reference {
     book: string,
-    chapter: number,
-    verse: number
+    chapters: Array<IChapter>
   }
 
 	export default defineComponent({
 	  data() {
       return {
-        data
+        bookData: [] as Reference[]
       }
 	  },
     methods: {
-      testHydrateData () {
-        let testReference = {} as Reference;
-        testReference.book = 'John';
-        testReference.chapter = 3;
-        testReference.verse = 3;
+      hydrateData () {
+        let refArray = [] as Reference[];
+        for (const i in studyData) {
+          let newRef = {} as Reference;
+          const ref = getRef(studyData[Number(i)]);
+          newRef = {
+            book: ref.book,
+            chapters: [{
+              chapter: ref.chapter,
+              verses: [ref.verse]
+            }]
+          }
+
+          let exist = false;
+          for (const j in refArray) {
+            if (refArray[j].book === ref.book) { // book exist
+              for (const k in refArray[j].chapters) {
+                if (refArray[j].chapters[k].chapter === ref.chapter) { // chapter exist
+                  exist = true;
+                  refArray[j].chapters[k].verses.push(ref.verse);
+                }
+              }
+            }
+          }
+
+          if (!exist) refArray.push(newRef);
+        }
+        this.bookData = refArray;
       },
-      getData () {
-        return this.data;
-      },
-      getDataObjItem (refObj: any) {
-        const index = selectedRef.value;
-        return refObj[index];
+      getStudyData () {
+        return studyData;
       },
       updateTopLevelRef (ref: string) {
         selectedRef.value = ref;
       }
     },
     beforeMount() {
-      this.testHydrateData()
+      this.hydrateData()
     }
 	});
 </script>

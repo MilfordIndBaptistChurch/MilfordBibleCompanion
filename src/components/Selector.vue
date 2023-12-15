@@ -37,11 +37,6 @@
 		props: ['data'],
 		data: () => {
 			return {
-					default: {
-						book: Array<any>,
-						chapter: Array<any>,
-						verse: Array<any>
-					},
 					newModel: [] as { book: any; chapters: { [x: number]: any[]; }; }[]
 				};
 		},
@@ -79,9 +74,6 @@
 					}
 				}
 				this.newModel = newModel;
-				// this.default.book = getDefault(newModel).book;
-				// this.default.chapter = getDefault(newModel).chapter;
-				// this.default.verse = getDefault(newModel).verse;
 				bookRef.value = getDefault(newModel).book;
 				chapterRef.value = getDefault(newModel).chapter;
 				verseRef.value = getDefault(newModel).verse;
