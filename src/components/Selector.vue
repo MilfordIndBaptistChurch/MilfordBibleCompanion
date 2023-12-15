@@ -1,6 +1,7 @@
 <script setup lang="ts">
+  import dataSource from '../common/data.json';
 	defineProps<{
-	  data: Array<String>
+	  bookData: Array<String>
 	}>()
 </script>
 
@@ -34,49 +35,13 @@
 	const chapterRef = ref();
 	const verseRef = ref();
 	export default {
-		props: ['data'],
-		data: () => {
-			return {
-					newModel: [] as { book: any; chapters: { [x: number]: any[]; }; }[]
-				};
-		},
+		props: ['bookData'],
 		methods: {
-			hydrateData() {
-				let newModel = [] as { book: any; chapters: { [x: number]: any[]; }; }[];
-				for (const prop in this.data) {
-					const ref = getRef(this.data[prop]);
-					const book = ref.book;
-					const chapter = ref.chapter;
-					const verse = ref.verse;
-
-					if (JSON.stringify(newModel).indexOf(book) === -1) {
-						newModel.push({
-							book,
-							chapters: {
-								[chapter]: [verse]
-							}
-						});
-					} else if (JSON.stringify(newModel).indexOf(book) > -1) {
-						for(const prop in newModel) {
-							const bookObject = newModel[prop];
-							if (bookObject.book === book) { // book exist
-								if (Number(getObjKeys(bookObject.chapters)[0]) === chapter) { // chapter exist
-									for (const verseIndex in bookObject.chapters[chapter]) {
-										if (bookObject.chapters[chapter][verseIndex] !== verse) {
-											bookObject.chapters[chapter].push(verse);
-										}
-									}
-								} else { // chapter doesn't exist
-									bookObject.chapters[chapter] = [verse];
-								}
-							}
-						}
-					}
-				}
-				this.newModel = newModel;
-				bookRef.value = getDefault(newModel).book;
-				chapterRef.value = getDefault(newModel).chapter;
-				verseRef.value = getDefault(newModel).verse;
+			assignBookData() {
+				let bookModel = this.bookData;
+				bookRef.value = getDefault(bookModel).book;
+				chapterRef.value = getDefault(bookModel).chapter;
+				verseRef.value = getDefault(bookModel).verse;
 			},
 	    handleBook(book:string) {
 	      bookRef.value = book;
@@ -85,41 +50,49 @@
 	    },
 	    getBooks() {
 	    	const books = [];
-	    	for (const prop in this.newModel) {
-	    		books.push(this.newModel[prop].book);
+	    	for (const i in this.bookData) {
+	    		books.push(this.bookData[i].book);
 	    	}
 	    	return books;
 	    },
 	    getChapters() {
 	    	const chapters = [];
-	    	for (const prop in this.newModel) {
-	    		const bookIndex = this.newModel[prop];
-	    		if (bookRef.value === bookIndex.book) {
-	    			for (const index in getObjKeys(bookIndex.chapters)) {
-	    				chapters.push(Number(getObjKeys(bookIndex.chapters)[index]));
-	    			}
+	    	for (const i in this.bookData) {
+	    		if (bookRef.value === this.bookData[i].book) {
+	    			for (const j in this.bookData[i].chapters) {
+    					chapters.push(this.bookData[i].chapters[j].chapter);
+    				}
 	    		}
 	    	}
 	    	return chapters;
 	    },
 	    getVerses() {
 	    	const verses = [];
-	    	for (const prop in this.newModel) {
-	    		const bookIndex = this.newModel[prop];
-	    		if (bookRef.value === bookIndex.book) {
-	    			for (const index in bookIndex.chapters[Number(getObjKeys(bookIndex.chapters)[0])]) {
-	    				verses.push(bookIndex.chapters[Number(getObjKeys(bookIndex.chapters)[0])][Number(index)]);
+	    	for (const i in this.bookData) {
+	    		if (bookRef.value === this.bookData[i].book) {
+	    			for (const j in this.bookData[i].chapters) {
+	    				if (chapterRef.value === this.bookData[i].chapters[j].chapter) {
+		    				for (const k in this.bookData[i].chapters[j].verses) {
+		    					verses.push(this.bookData[i].chapters[j].verses[k]);
+		    				}
+	    				}
 	    			}
 	    		}
 	    	}
 	    	return verses;
 	    },
+	    // Element implicitly has an 'any' type because expression of type 'string' can't be used to index type ** resolves this for now **
+	    getIndex(obj: any, string: any) {
+	    	return obj[string]!; // will never be undefined!
+	    },
 	    getVerse() {
 	    	const regex = /\*(.*?)\*/g;
 	    	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #89e8ff;">$1</span>`;
-	    	for (const prop in this.data) {
-	    		if(getObjKeys(this.data[prop])[0] === `${bookRef.value} ${chapterRef.value}:${verseRef.value}`) {
-	    			const value = this.data[prop][getObjKeys(this.data[prop])[0]].verse.replace(regex, spanTags);
+	    	for (const i in dataSource) {
+	    		if(getObjKeys(dataSource[i])[0] === `${bookRef.value} ${chapterRef.value}:${verseRef.value}`) {
+						const stringRef = getObjKeys(dataSource[i])[0];
+						const index = this.getIndex(dataSource[i], stringRef);
+	    			const value = index.verse.replace(regex, spanTags);
 			    	return `<span>${verseRef.value}</span>. ${value}`;
 	    		}
 	    	}
@@ -129,7 +102,7 @@
 	    }
 		},
 		beforeMount() {
-		  this.hydrateData()
+		  this.assignBookData()
 		}	
 	}
 </script>

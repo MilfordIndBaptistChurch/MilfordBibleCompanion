@@ -8,11 +8,11 @@ const getRef = (dataIndex) => {
 	}
 }
 
-const getDefault = (newModel) => {
+const getDefault = (bookModel) => {
 	return {
-		book: newModel[0].book,
-		chapter: Number(Object.keys(newModel[0].chapters)[0]),
-		verse: newModel[0].chapters[Number(Object.keys(newModel[0].chapters)[0])][0]
+		book: bookModel[0].book,
+		chapter: bookModel[0].chapters[0].chapter,
+		verse: bookModel[0].chapters[0].verses[0]
 	}
 }
 
