@@ -1,6 +1,8 @@
 # Milford Bible Companion
 Create your own Bible Word Study using your own predefined list: definition, context, opposites.
 
+[<img src="https://github.com/MilfordIndBaptistChurch/MilfordBibleCompanion/tree/main/src/assets/screenshot.png">](https://milfordbiblecompanion.netlify.app)
+
 ## Update JSON file
 You can update data.json file under `./src/common/data.json`.
 
@@ -51,3 +53,5 @@ Distributed under the MIT License.
 Email: jamess.developer+mibc@gmail.com
 
 Project URL: https://github.com/MilfordIndBaptistChurch/MilfordBibleCompanion
+
+Demo URL: https://milfordbiblecompanion.netlify.app
