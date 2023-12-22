@@ -57,6 +57,17 @@
 	}
 },
 {
+	"1-Corinthians 2:14": {
+		"verse": "But the *natural man* receiveth not the things of the Spirit of God: for they are foolishness unto him: neither can he know them, because they are spiritually discerned.",	
+		"study": [{
+			"highlight": "natural man",
+			"methods": {
+				"definition": "The natural man is the soul man"
+			}
+		}]
+	}
+},
+{
 	"2-Corinthians 11:2": {
 		"verse": "For I am jealous over you with godly jealousy: for I have *espoused* you to one husband, that I may present you as a chaste virgin to Christ.",
 		"study": [{

@@ -11,21 +11,21 @@
 			<div class="field has-addons">
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
-				    <select v-model="bookRef" placeholder="Select" @change="handleBook" v-on:Change="setRefData" style="width: 135px;">
+				    <select v-model="bookRef" placeholder="Select" @change="handleBook" v-on:change="setRefData" style="width: 155px;">
 				      <option v-for="book in getBooks()" :label="book" :value="book" />
 				    </select>
 				  </div>
 				</div>
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
-				    <select v-model="chapterRef" placeholder="Select" v-on:Change="setRefData" style="width: 75px">
+				    <select v-model="chapterRef" placeholder="Select" v-on:change="setRefData" style="width: 75px">
 				      <option v-for="chapter in getChapters()" :label="chapter" :value="chapter" />
 				    </select>
 				  </div>
 				</div>
 			  <div class="control">
 			    <div class="select">
-				    <select v-model="verseRef" placeholder="Select" v-on:Change="setRefData" style="width: 75px">
+				    <select v-model="verseRef" placeholder="Select" v-on:change="setRefData" style="width: 75px">
 				      <option v-for="verse in getVerses()" :label="verse" :value="verse" />
 				    </select>
 				  </div>
