@@ -1,7 +1,7 @@
 # Milford Bible Companion
 Create your own Bible Word Study using your own predefined list: definition, context, opposites.
 
-[<img src="https://github.com/MilfordIndBaptistChurch/MilfordBibleCompanion/tree/main/src/assets/screenshot.png">](https://milfordbiblecompanion.netlify.app)
+[<img src="https://raw.githubusercontent.com/MilfordIndBaptistChurch/MilfordBibleCompanion/main/src/assets/screenshot.png">](https://milfordbiblecompanion.netlify.app)
 
 ## Update JSON file
 You can update data.json file under `./src/common/data.json`.
