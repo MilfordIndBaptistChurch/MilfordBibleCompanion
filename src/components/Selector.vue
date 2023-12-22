@@ -7,20 +7,36 @@
 
 <template>
   <div>
-    <div class="text-18 font-600 mt-4">
-	    <el-select v-model="bookRef" placeholder="Select" @change="handleBook($event)" v-on:Change="setRefData" class="mr-2" style="width: 135px">
-	      <el-option v-for="book in getBooks()" :label="book" :value="book" />
-	    </el-select>
-	    <el-select v-model="chapterRef" placeholder="Select" v-on:Change="setRefData" class="mr-2" style="width: 75px">
-	      <el-option v-for="chapter in getChapters()" :label="chapter" :value="chapter" />
-	    </el-select>
-	    <el-select v-model="verseRef" placeholder="Select" v-on:Change="setRefData" style="width: 75px">
-	      <el-option v-for="verse in getVerses()" :label="verse" :value="verse" />
-	    </el-select>
+    <div style="margin: 22px 0 0 0">
+			<div class="field has-addons">
+			  <div class="control" style="margin: 0 10px 0 0">
+			    <div class="select">
+				    <select v-model="bookRef" placeholder="Select" @change="handleBook" v-on:Change="setRefData" style="width: 135px;">
+				      <option v-for="book in getBooks()" :label="book" :value="book" />
+				    </select>
+				  </div>
+				</div>
+			  <div class="control" style="margin: 0 10px 0 0">
+			    <div class="select">
+				    <select v-model="chapterRef" placeholder="Select" v-on:Change="setRefData" style="width: 75px">
+				      <option v-for="chapter in getChapters()" :label="chapter" :value="chapter" />
+				    </select>
+				  </div>
+				</div>
+			  <div class="control">
+			    <div class="select">
+				    <select v-model="verseRef" placeholder="Select" v-on:Change="setRefData" style="width: 75px">
+				      <option v-for="verse in getVerses()" :label="verse" :value="verse" />
+				    </select>
+				  </div>
+				</div>
+			</div>
     </div>
-    <div class="text-16 mt-3 verse-wrapper" style="color: var(--el-text-color-regular)">
-      <div v-html="getVerse()"></div>
-    </div>
+		<article class="message is-dark" style="margin: 25px 0 0 0">
+		  <div class="message-body" style="font-size: 30px">
+		    <div v-html="getVerse()"></div>
+		  </div>
+		</article>
   </div>
 </template>
 
@@ -43,8 +59,8 @@
 				chapterRef.value = getDefault(bookModel).chapter;
 				verseRef.value = getDefault(bookModel).verse;
 			},
-	    handleBook(book:string) {
-	      bookRef.value = book;
+	    handleBook(book: any) {
+	      bookRef.value = book.target.value;
 				chapterRef.value = this.getChapters()[0];
 				verseRef.value = this.getVerses()[0];
 	    },
@@ -87,7 +103,7 @@
 	    },
 	    getVerse() {
 	    	const regex = /\*(.*?)\*/g;
-	    	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #89e8ff;">$1</span>`;
+	    	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #ffd60a;">$1</span>`;
 	    	for (const i in dataSource) {
 	    		if(getObjKeys(dataSource[i])[0] === `${bookRef.value} ${chapterRef.value}:${verseRef.value}`) {
 						const stringRef = getObjKeys(dataSource[i])[0];

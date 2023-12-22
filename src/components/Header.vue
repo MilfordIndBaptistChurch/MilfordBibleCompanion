@@ -7,10 +7,8 @@
 
 <template>
 	<div>
-    <span class="text-xl font-600 mr-3">{{ title }}</span>
-    <span class="text-15 mr-2" style="color: var(--el-text-color-regular)">
-      By Milford Ind. Baptist Church
-    </span>
+    <p class="title is-1">{{ title }}</p>
+    <p class="subtitle is-3" style="margin: -20px 0 15px 0">By Milford Ind. Baptist Church</p>
     <Badge type="vuejs" />
     <Badge type="typescript" />
   </div>

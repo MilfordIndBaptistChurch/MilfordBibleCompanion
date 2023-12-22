@@ -17,6 +17,10 @@
   </main>
 </template>
 
+<style lang="scss">
+  @import "../assets/main.scss";
+</style>
+
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { getRef } from '../common/utils';

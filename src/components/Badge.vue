@@ -52,6 +52,7 @@
 
   .badge-text {
     color: #fff;
+    font-size: 14px;
     margin-left: 5px;
   }
 

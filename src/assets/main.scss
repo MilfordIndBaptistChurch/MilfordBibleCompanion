@@ -1,3 +1,5 @@
+@import "../node_modules/bulma/bulma.sass";
+
 * {
   font-family: arial;
 }
@@ -7,11 +9,4 @@
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
-}
-
-.verse-wrapper {
-	width: 900px;
-	padding: 10px 15px;
-	line-height: 35px;
-	border: 1px #000 dashed;
 }
