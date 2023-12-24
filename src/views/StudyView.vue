@@ -10,8 +10,8 @@
   	<Selector v-bind:bookData="getBookData()" v-on:set-ref-data="updateTopLevelRef" />
     <div v-for="items in dataSource">
         <div v-for="item in items[selectedRef as keyof typeof items]">
-          <div v-if="Array.isArray(item)" v-for="studyRef in item">
-            <Study v-bind:highlight="studyRef.highlight" v-bind:methods="studyRef.methods" />
+          <div v-if="Array.isArray(item)" v-for="(studyRef, i) in item">
+            <Study v-bind:index="i" v-bind:highlight="studyRef.highlight" v-bind:methods="studyRef.methods" />
           </div>
           <Test msg="hello world" name="Hello world" />
         </div>
