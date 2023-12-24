@@ -8,9 +8,11 @@
 <template>
   <main>
   	<Selector v-bind:bookData="getBookData()" v-on:set-ref-data="updateTopLevelRef" />
-    <div v-for="refObj in dataSource">
-        <div v-for="item in refObj[selectedRef as keyof typeof refObj]">
-          <Study v-if="Array.isArray(item)" v-bind:highlight="item[0].highlight" v-bind:methods="item[0].methods" />
+    <div v-for="items in dataSource">
+        <div v-for="item in items[selectedRef as keyof typeof items]">
+          <div v-if="Array.isArray(item)" v-for="studyRef in item">
+            <Study v-bind:highlight="studyRef.highlight" v-bind:methods="studyRef.methods" />
+          </div>
           <Test msg="hello world" name="Hello world" />
         </div>
   	</div>
