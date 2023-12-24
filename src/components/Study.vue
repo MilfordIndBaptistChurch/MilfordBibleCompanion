@@ -23,7 +23,7 @@
 <script lang="ts">
 
   export default {
-    props: ['index'],
+    props: ['index', 'methods', 'highlight'],
     data() {
       return {
         isCollapsed: this.index === 0 ? false : true
