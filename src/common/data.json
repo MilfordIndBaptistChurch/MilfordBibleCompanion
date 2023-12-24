@@ -6,7 +6,8 @@
 			"methods": {
 				"definition": "to woo her and ask her in marriage",
 				"greek": "μνηστεύω",
-				"characters": "Jesus Christ, Mary, Joseph, Holy Ghost"
+				"characters": "Jesus Christ, Mary, Joseph, Holy Ghost",
+				"errors": "Briderism"
 			}
 		}]
 	}
@@ -63,7 +64,7 @@
 		"study": [{
 			"highlight": "natural man",
 			"methods": {
-				"definition": "The natural man is the soul man"
+				"definition": "The natural man is the soul man (GCBI)"
 			}
 		}]
 	}
