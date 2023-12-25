@@ -20,8 +20,15 @@ const getObjKeys = (value) => {
 	return Object.keys(value);
 }
 
+const getUniqueValues = (array) => (
+  array.filter((currentValue, index, arr) => (
+		arr.indexOf(currentValue) === index
+	))
+)
+
 export {
 	getRef,
 	getDefault,
-	getObjKeys
+	getObjKeys,
+	getUniqueValues
 }
