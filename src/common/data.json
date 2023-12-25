@@ -70,6 +70,23 @@
 	}
 },
 {
+	"2-Corinthians 5:8": {
+		"verse": "We are *confident*, I say, and willing rather to be absent from the body, and to be present with the Lord.",
+		"study": [{
+			"highlight": "confident",
+			"methods": {
+				"definition": "to exercise courage"
+			},
+			"sermons": [
+				{
+					"title": "In-between two good things",
+					"date": "1/1/09"
+				}
+			]
+		}]
+	}
+},
+{
 	"2-Corinthians 11:2": {
 		"verse": "For I am jealous over you with godly jealousy: for I have *espoused* you to one husband, that I may present you as a chaste virgin to Christ.",
 		"study": [{

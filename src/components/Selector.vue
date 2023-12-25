@@ -18,7 +18,7 @@
 				</div>
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
-				    <select v-model="chapterRef" placeholder="Select" v-on:change="setRefData" style="width: 75px">
+				    <select v-model="chapterRef" placeholder="Select" @change="handleChapter" v-on:change="setRefData" style="width: 75px">
 				      <option v-for="chapter in getChapters()" :label="chapter" :value="chapter" />
 				    </select>
 				  </div>
@@ -63,6 +63,9 @@
 	      bookRef.value = book.target.value;
 				chapterRef.value = this.getChapters()[0];
 				verseRef.value = this.getVerses()[0];
+	    },
+	    handleChapter(event: any) {
+	    	verseRef.value = this.getVerses()[0];
 	    },
 	    getBooks() {
 	    	const books = [];

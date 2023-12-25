@@ -62,10 +62,15 @@
           let exist = false;
           for (const j in refArray) {
             if (refArray[j].book === ref.book) { // book exist
+              exist = true;
               for (const k in refArray[j].chapters) {
                 if (refArray[j].chapters[k].chapter === ref.chapter) { // chapter exist
-                  exist = true;
-                  refArray[j].chapters[k].verses.push(ref.verse);
+                  refArray[j].chapters[k].verses.push(ref.verse); // chapter does not exist
+                } else {
+                  refArray[j].chapters.push({
+                    chapter: ref.chapter,
+                    verses: [ref.verse]
+                  });
                 }
               }
             }
