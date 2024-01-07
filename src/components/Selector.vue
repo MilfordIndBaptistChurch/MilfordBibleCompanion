@@ -23,13 +23,18 @@
 				    </select>
 				  </div>
 				</div>
-			  <div class="control">
+			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
 				    <select v-model="verseRef" placeholder="Select" v-on:change="setRefData" style="width: 75px">
 				      <option v-for="verse in getVerses()" :label="verse" :value="verse" />
 				    </select>
 				  </div>
 				</div>
+				<!--
+		    <audio controls preload="none" style="display: block; width: 300px; height: 40px">
+    			<source type="audio/mpeg" src="https://www.kingjamesbibleonline.org/mp3/40_Matthew/4_001_Matthew01_KJV.mp3">
+  			</audio>
+  			-->
 			</div>
     </div>
 		<article class="message is-dark" style="margin: 25px 0 0 0">
