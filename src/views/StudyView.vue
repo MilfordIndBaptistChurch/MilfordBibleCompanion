@@ -2,7 +2,7 @@
 	import Selector from '../components/Selector.vue';
 	import Study from '../components/Study.vue';
   import Test from '../components/Test.vue';
-  import dataSource from '../common/data.json';
+  import dataSource from '../data/highlights.json';
 </script>
 
 <template>
@@ -154,9 +154,9 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { getRef } from '../common/utils';
+  import { getRef, getObjKeys } from '../common/utils';
 
-  const selectedRef = ref(Object.keys(dataSource[0])[0]);
+  const selectedRef = ref(Object.keys(dataSource[0])[0] === 'Genesis 1:1' ? Object.keys(dataSource[0])[0] : '');
 
   interface IChapter {
     chapter: number,
@@ -179,7 +179,7 @@
         let refArray = [] as Reference[];
         for (const i in dataSource) {
           let newRef = {} as Reference;
-          const ref = getRef(dataSource[Number(i)]);
+          const ref = getRef(getObjKeys(dataSource[Number(i)])[0]);
           newRef = {
             book: ref.book,
             chapters: [{

@@ -2,7 +2,7 @@
 	import { RouterLink, RouterView } from 'vue-router'
 	import Header from './components/Header.vue'
 	import SideNav from './components/SideNav.vue'
-  import dataSource from './common/data.json';
+  import dataSource from './data/highlights.json';
 </script>
 
 <template>
@@ -37,7 +37,7 @@
 	    setBookCount () {
 				let bookArray = [] as Array<String>;           
         for (const i in dataSource) {
-        	const book = getRef(dataSource[Number(i)]).book;
+        	const book = getRef(getObjKeys(dataSource[Number(i)])[0]).book;
         	bookArray.push(book);
         	bookArray = getUniqueValues(bookArray as []);
         }

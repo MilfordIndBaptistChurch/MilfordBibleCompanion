@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import dataSource from '../common/data.json';
+  import dataSource from '../data/highlights.json';
+  import indexSource from '../data/bible/Index.json';
 	defineProps<{
 	  bookData: Array<String>
 	}>()
@@ -7,39 +8,34 @@
 
 <template>
   <div>
-    <div style="margin: 22px 0 0 0">
+    <div style="margin: 22px 0 0 0;">
 			<div class="field has-addons">
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
 				    <select v-model="bookRef" placeholder="Select" @change="handleBook" v-on:change="setRefData" style="width: 155px;">
-				      <option v-for="book in getBooks()" :label="book" :value="book" />
+				      <option v-for="book in getBooks()" :label="handleBookMarker(book)" :value="book" />
 				    </select>
 				  </div>
 				</div>
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
 				    <select v-model="chapterRef" placeholder="Select" @change="handleChapter" v-on:change="setRefData" style="width: 75px">
-				      <option v-for="chapter in getChapters()" :label="chapter" :value="chapter" />
+				      <option v-for="chapter in getChapters()" :label="handleChapterMarker(chapter)" :value="chapter" />
 				    </select>
 				  </div>
 				</div>
 			  <div class="control" style="margin: 0 10px 0 0">
 			    <div class="select">
-				    <select v-model="verseRef" placeholder="Select" v-on:change="setRefData" style="width: 75px">
-				      <option v-for="verse in getVerses()" :label="verse" :value="verse" />
+				    <select v-model="verseRef" placeholder="Select" @change="handleVerse" v-on:change="setRefData" style="width: 75px">
+				      <option v-for="verse in getVerses()" :label="handleVerseMarker(verse)" :value="verse" />
 				    </select>
 				  </div>
 				</div>
-				<!--
-		    <audio controls preload="none" style="display: block; width: 300px; height: 40px">
-    			<source type="audio/mpeg" src="https://www.kingjamesbibleonline.org/mp3/40_Matthew/4_001_Matthew01_KJV.mp3">
-  			</audio>
-  			-->
 			</div>
     </div>
 		<article class="message is-dark" style="margin: 25px 0 0 0">
 		  <div class="message-body" style="font-size: 30px">
-		    <div v-html="getVerse()"></div>
+		    <div v-html="verseText"></div>
 		  </div>
 		</article>
   </div>
@@ -53,80 +49,126 @@
 		getObjKeys
 	} from '../common/utils';
 	const bookRef = ref();
+	const limitRef = ref<any>();
 	const chapterRef = ref();
 	const verseRef = ref();
+	const verseText = ref();
+
 	export default {
 		props: ['bookData'],
 		methods: {
+	    // Element implicitly has an 'any' type because expression of type 'string' can't be used to index type ** resolves this for now **
+	    getIndex(obj: any, string: any) {
+	    	return obj[string]!; // will never be undefined!
+	    },
 			assignBookData() {
-				let bookModel = this.bookData;
-				bookRef.value = getDefault(bookModel).book;
-				chapterRef.value = getDefault(bookModel).chapter;
-				verseRef.value = getDefault(bookModel).verse;
+    		bookRef.value = getObjKeys(indexSource[0])[0];
+    		chapterRef.value = 1;
+    		verseRef.value = 1;
+    		limitRef.value = this.getIndex(indexSource[0], getObjKeys(indexSource[0])[0]);
+			},
+			handleBookMarker(book: any) {
+				let marker = book;
+				for (const i in dataSource) {
+					if (getRef(getObjKeys(dataSource[i])[0]).book === book
+						&& marker.indexOf('*') === -1) {
+						marker += ' *';
+					}
+				}
+				return marker;
+			},
+			handleChapterMarker(chapter: any) {
+				let marker = chapter;
+				for (const i in dataSource) {
+					if (getRef(getObjKeys(dataSource[i])[0]).chapter === Number(chapter)
+						&& getRef(getObjKeys(dataSource[i])[0]).book === bookRef.value
+						&& marker.indexOf('*') === -1) {
+						marker += ' *';
+					}
+				}
+				return marker;
+			},
+			handleVerseMarker(verse: any) {
+				let marker = verse;
+				for (const i in dataSource) {
+					if (getRef(getObjKeys(dataSource[i])[0]).verse === Number(verse)
+						&& getRef(getObjKeys(dataSource[i])[0]).book === bookRef.value
+						&& marker.toString().indexOf('*') === -1) {
+							marker += ' *';
+					}
+				}
+				return marker;
 			},
 	    handleBook(book: any) {
 	      bookRef.value = book.target.value;
+
+	      for (const i in indexSource) {
+	      	if (getObjKeys(indexSource[i])[0] === book.target.value) {
+	      		limitRef.value = this.getIndex(indexSource[i], getObjKeys(indexSource[i])[0]);
+	      	}
+	      }
+
 				chapterRef.value = this.getChapters()[0];
 				verseRef.value = this.getVerses()[0];
+				this.getVerse();
 	    },
 	    handleChapter(event: any) {
-	    	verseRef.value = this.getVerses()[0];
+	    	chapterRef.value = event.target.value;
+	    	verseRef.value = 1;
+	    	this.getVerse();
+	    },
+	    handleVerse(event: any) {
+	    	verseRef.value = event.target.value;
+	    	this.getVerse();
 	    },
 	    getBooks() {
 	    	const books = [];
-	    	for (const i in this.bookData) {
-	    		books.push(this.bookData[i].book);
+	    	for (const i in indexSource) {
+	    		books.push(getObjKeys(indexSource[i])[0]);
 	    	}
 	    	return books;
 	    },
 	    getChapters() {
 	    	const chapters = [];
-	    	for (const i in this.bookData) {
-	    		if (bookRef.value === this.bookData[i].book) {
-	    			for (const j in this.bookData[i].chapters) {
-    					chapters.push(this.bookData[i].chapters[j].chapter);
-    				}
-	    		}
+	    	for (const i in limitRef.value) {
+	    		chapters.push(i);
 	    	}
 	    	return chapters;
 	    },
 	    getVerses() {
 	    	const verses = [];
-	    	for (const i in this.bookData) {
-	    		if (bookRef.value === this.bookData[i].book) {
-	    			for (const j in this.bookData[i].chapters) {
-	    				if (chapterRef.value === this.bookData[i].chapters[j].chapter) {
-		    				for (const k in this.bookData[i].chapters[j].verses) {
-		    					verses.push(this.bookData[i].chapters[j].verses[k]);
-		    				}
-	    				}
-	    			}
-	    		}
+	    	for (let i = 0; i < limitRef.value[chapterRef.value]; i++) {
+	    		verses.push(i + 1);
 	    	}
 	    	return verses;
 	    },
-	    // Element implicitly has an 'any' type because expression of type 'string' can't be used to index type ** resolves this for now **
-	    getIndex(obj: any, string: any) {
-	    	return obj[string]!; // will never be undefined!
-	    },
-	    getVerse() {
-	    	const regex = /\*(.*?)\*/g;
-	    	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #ffd60a;">$1</span>`;
-	    	for (const i in dataSource) {
-	    		if(getObjKeys(dataSource[i])[0] === `${bookRef.value} ${chapterRef.value}:${verseRef.value}`) {
-						const stringRef = getObjKeys(dataSource[i])[0];
-						const index = this.getIndex(dataSource[i], stringRef);
-	    			const value = index.verse.replace(regex, spanTags);
-			    	return `<span>${verseRef.value}</span>. ${value}`;
-	    		}
-	    	}
+	    async getVerse () {
+	    	await import('../data/bible/' + bookRef.value.replace(/\s/g, '') + '.json')
+        .then(({default: json}) => {
+        	// console.log(json);
+        	let verse;
+        	let text;
+        	for (const i in json.chapters) {
+        		if (Number(json.chapters[i].chapter) === Number(chapterRef.value)) {
+        			for (const j in json.chapters[i].verses) {
+        				if (Number(json.chapters[i].verses[j].verse) === Number(verseRef.value)) {
+									verse = json.chapters[i].verses[j].verse;
+									text = json.chapters[i].verses[j].text;
+								}
+							}
+        		}
+          }
+          // console.log(`<span>${verse}</span>. ${text}`);
+          verseText.value = `<span>${verse}</span>. ${text}`;
+        });
 	    },
 	    setRefData () {
 	    	this.$emit('set-ref-data', `${bookRef.value} ${chapterRef.value}:${verseRef.value}`);
 	    }
 		},
 		beforeMount() {
-		  this.assignBookData()
-		}	
+		  this.assignBookData();
+		  this.getVerse();
+		}
 	}
 </script>

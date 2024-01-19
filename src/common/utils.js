@@ -1,10 +1,14 @@
-const getRef = (dataIndex) => {
-	const ref = Object.keys(dataIndex)[0];
+const getRef = (bookRef) => {
+	let book = bookRef.split(':')[0];
+	let chapter = bookRef.split(':')[0];
+
+	book = book.replace(parseInt(book.match(/\d+$/)[0], 10), '').trim();
+	chapter = Number(parseInt(chapter.match(/\d+$/)[0], 10));
+
 	return {
-		ref,
-		book: ref.split(' ')[0],
-		chapter: Number(ref.split(' ')[1].split(':')[0]),
-		verse: Number(ref.split(' ')[1].split(':')[1])
+		book,
+		chapter,
+		verse: Number(bookRef.split(':')[1])
 	}
 }
 

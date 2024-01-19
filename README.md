@@ -37,6 +37,11 @@ npm run dev
 npm run build
 ```
 
+### Type-Check
+```sh
+npm run type-check
+```
+
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
 ```sh
 npm run test:unit
