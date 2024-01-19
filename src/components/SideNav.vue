@@ -15,7 +15,6 @@
 		  <ul class="menu-list">
 		    <li><a>Books ({{booksCount}})</a></li>
 		    <li><a>Cross ref ({{crossRefCount}})</a></li>
-		    <li><a>Accordance (0)</a></li>
 		  </ul>
 		  <p class="menu-label">
 		    Application
