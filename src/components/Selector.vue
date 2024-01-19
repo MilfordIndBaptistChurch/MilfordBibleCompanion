@@ -143,7 +143,7 @@
 	    	return verses;
 	    },
 	    async getVerse () {
-	    	await import('../data/bible/' + bookRef.value.replace(/\s/g, '') + '.json')
+	    	await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
         .then(({default: json}) => {
         	// console.log(json);
         	let verse;
