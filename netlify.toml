@@ -1,5 +1,5 @@
 [[headers]]
-  for = "/src/data/*"
+  for = "/data/*"
   [headers.values]
     Cache-Control = '''
     public,
