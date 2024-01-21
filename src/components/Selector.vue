@@ -31,18 +31,43 @@
 				    </select>
 				  </div>
 				</div>
+				<div class="control columns is-vcentered" style="margin: 0 10px 0 0">
+					<span style="margin: 0 7px 0 0;font-size: 14px;color: #a0a0a0">Show chapter</span>
+					<a-switch v-model:checked="state.checked" />
+				</div>
 			</div>
     </div>
-		<article class="message is-dark" style="margin: 25px 0 0 0">
+		<article v-if="!state.checked" class="message is-dark" style="margin: 25px 0 0 0">
 		  <div class="message-body" style="font-size: 30px">
 		    <div v-html="verseText"></div>
 		  </div>
 		</article>
+	  <a-list
+	    item-layout="horizontal"
+	    :data-source="chapterListRef"
+	    size="small"
+	    v-if="state.checked"
+	  >
+	    <template #renderItem="{ item }">
+	      <a-list-item style="font-size: 18px">
+          <a-list-item-meta
+            description=""
+          >
+            <template #title>
+            	<h4 class="ant-list-item-meta-title">
+            		<a href="">{{ item.verse.index }}</a>
+            	</h4>
+            </template>
+          </a-list-item-meta>
+  	      {{ item.verse.text }}
+	      </a-list-item>
+	    </template>
+	  </a-list>
   </div>
 </template>
 
 <script lang="ts">
-	import { ref } from 'vue';
+	import { ref, reactive } from 'vue';
 	import {
 		getRef,
 		getDefault,
@@ -53,6 +78,11 @@
 	const chapterRef = ref();
 	const verseRef = ref();
 	const verseText = ref();
+	const chapterListRef = ref();
+
+	const state = reactive({
+	  checked: false
+	});
 
 	export default {
 		props: ['bookData'],
@@ -116,6 +146,7 @@
 	    	chapterRef.value = event.target.value;
 	    	verseRef.value = 1;
 	    	this.getVerse();
+	    	this.getAllChapters();
 	    },
 	    handleVerse(event: any) {
 	    	verseRef.value = event.target.value;
@@ -141,6 +172,25 @@
 	    		verses.push(i + 1);
 	    	}
 	    	return verses;
+	    },
+	    async getAllChapters() {
+	    	await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
+        .then(({default: json}) => {
+        	let verses = [];
+        	for (const i in json.chapters) {
+        		if(Number(json.chapters[i].chapter) === Number(chapterRef.value)) {
+        			for (const j in json.chapters[i].verses) {
+        				verses.push({
+									verse: {
+										index: `#${json.chapters[i].verses[j].verse}`,
+										text: json.chapters[i].verses[j].text
+									}
+        				});
+        			}
+        		}
+        	}
+        	chapterListRef.value = verses;
+        });
 	    },
 	    async getVerse () {
 	    	await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
@@ -168,6 +218,7 @@
 		},
 		beforeMount() {
 		  this.assignBookData();
+		  this.getAllChapters();
 		  this.getVerse();
 		}
 	}
