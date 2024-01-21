@@ -141,6 +141,7 @@
 				chapterRef.value = this.getChapters()[0];
 				verseRef.value = this.getVerses()[0];
 				this.getVerse();
+				this.getAllChapters();
 	    },
 	    handleChapter(event: any) {
 	    	chapterRef.value = event.target.value;
