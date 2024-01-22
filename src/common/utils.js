@@ -3,12 +3,12 @@ const getRef = (bookRef) => {
 	let chapter = bookRef.split(':')[0];
 
 	book = book.replace(parseInt(book.match(/\d+$/)[0], 10), '').trim();
-	chapter = Number(parseInt(chapter.match(/\d+$/)[0], 10));
+	chapter = parseInt(chapter.match(/\d+$/)[0], 10);
 
 	return {
 		book,
 		chapter,
-		verse: Number(bookRef.split(':')[1])
+		verse: bookRef.split(':')[1]
 	}
 }
 

@@ -37,7 +37,7 @@
 	    setBookCount () {
 				let bookArray = [] as Array<String>;           
         for (const i in dataSource) {
-        	const book = getRef(getObjKeys(dataSource[Number(i)])[0]).book;
+        	const book = getRef(getObjKeys(dataSource[i])[0]).book;
         	bookArray.push(book);
         	bookArray = getUniqueValues(bookArray as []);
         }
@@ -46,8 +46,8 @@
 	    setReusableMethodCount (methodCountRef:string, countRef:any) {
 	    	let reusableArray = [] as Array<String>;
 	    	for (const i in dataSource) {
-		    	const stringRef = getObjKeys(dataSource[Number(i)])[0];
-		    	const index = this.getIndex(dataSource[Number(i)], stringRef);
+		    	const stringRef = getObjKeys(dataSource[i])[0];
+		    	const index = this.getIndex(dataSource[i], stringRef);
 		    	const study = index.study;
 
 	      	for (const j in study) {

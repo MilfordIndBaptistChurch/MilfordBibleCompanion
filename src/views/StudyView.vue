@@ -179,7 +179,7 @@
         let refArray = [] as Reference[];
         for (const i in dataSource) {
           let newRef = {} as Reference;
-          const ref = getRef(getObjKeys(dataSource[Number(i)])[0]);
+          const ref = getRef(getObjKeys(dataSource[i])[0]);
           newRef = {
             book: ref.book,
             chapters: [{

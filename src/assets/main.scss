@@ -36,10 +36,44 @@ h4 {
   padding: 2rem;
 }
 
+.selector {
+	margin: 22px 0 0 0;
+}
+
 .side-nav {
 	background: #f9f9f9;
 	width: 11.25rem;
 	padding: 2rem 25px 25px 25px;
+}
+
+.control {
+	margin: 0 10px 0 0 !important;
+}
+
+.book-select {
+	width: 155px;
+}
+
+.chapter-select, .verse-select {
+	width: 75px;
+}
+
+.show-chapter {
+	margin: 0 7px 0 0;
+	font-size: 14px;
+	color: #a0a0a0;
+}
+
+.message.is-dark {
+	margin: 25px 0 0 0 !important;
+
+	.message-body {
+		font-size: 30px !important;
+	}
+}
+
+.list {
+	font-size: 18px;
 }
 
 .menu-list li a {
