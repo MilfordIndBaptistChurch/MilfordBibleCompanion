@@ -50,6 +50,7 @@
 
 <script lang="ts">
 	import { ref, reactive } from 'vue';
+	import jsonata from 'jsonata';
 	import {
 		getAllChapters,
 		handleBookMarker,
@@ -61,6 +62,18 @@
 		getDefault,
 		getObjKeys
 	} from '../common/utils';
+	/**
+
+	New mapping concept
+
+	*/
+	const newBookRef = ref({
+		name: undefined,
+		chapter: undefined,
+		verse: undefined,
+		text: undefined,
+		all: undefined
+	});
 	const bookRef = ref();
 	const limitRef = ref<any>();
 	const chapterRef = ref();
@@ -75,22 +88,28 @@
 	export default {
 		props: ['bookData'],
 		methods: {
-	    // Element implicitly has an 'any' type because expression of type 'string' can't be used to index type ** resolves this for now **
-	    getIndex(obj: any, string: any) {
-	    	return obj[string]!; // will never be undefined!
-	    },
-			assignBookData() {
-    		bookRef.value = getObjKeys(indexSource[0])[0];
+			async assignDefaults () {
+		    const expression = jsonata('$.Genesis');
+		    const chapters = await expression.evaluate(indexSource);
+
+    		bookRef.value = 'Genesis';
     		chapterRef.value = 1;
     		verseRef.value = 1;
-    		limitRef.value = this.getIndex(indexSource[0], getObjKeys(indexSource[0])[0]);
+    		limitRef.value = chapters;
 			},
 	    async handleBook(book: any) {
+		    const expression = jsonata('$keys(*)');
+		    const books = await expression.evaluate(indexSource);
+
 	      bookRef.value = book.target.value;
 
 	      for (const i in indexSource) {
-	      	if (getObjKeys(indexSource[i])[0] === book.target.value) {
-	      		limitRef.value = this.getIndex(indexSource[i], getObjKeys(indexSource[i])[0]);
+	      	if (books[i] === book.target.value) {
+
+				    const expression = jsonata('$.`' + books[i] + '`');
+				    const chapters = await expression.evaluate(indexSource);
+
+	      		limitRef.value = chapters;
 	      	}
 	      }
 
@@ -117,13 +136,14 @@
 	    	return books;
 	    },
 	    getChapters() {
-	    	const chapters = [];
+	    	const chapters = [];	    	
 	    	for (const i in limitRef.value) {
 	    		chapters.push(Number(i));
 	    	}
 	    	return chapters;
 	    },
 	    getVerses() {
+	    	if(!chapterRef.value) return;
 	    	const verses = [];
 	    	for (let i = 0; i < limitRef.value[chapterRef.value]; i++) {
 	    		verses.push(i + 1);
@@ -132,19 +152,24 @@
 	    },
 	    async getVerse () {
 	    	await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
-        .then(({default: json}) => {
+        .then(async ({default: json}) => {
         	let verse;
         	let text;
-        	for (const i in json.chapters) {
-        		if (Number(json.chapters[i].chapter) === chapterRef.value) {
-        			for (const j in json.chapters[i].verses) {
-        				if (Number(json.chapters[i].verses[j].verse) === verseRef.value) {
-									verse = json.chapters[i].verses[j].verse;
-									text = json.chapters[i].verses[j].text;
+
+		    	const expression = jsonata('$.*');
+			    const chaptersVerse = await expression.evaluate(json);
+
+        	for (const i in chaptersVerse) {
+        		if (Number(chaptersVerse[i].chapter) === chapterRef.value) {
+        			for (const j in chaptersVerse[i].verses) {
+        				if (Number(chaptersVerse[i].verses[j].verse) === verseRef.value) {
+									verse = chaptersVerse[i].verses[j].verse;
+									text = chaptersVerse[i].verses[j].text;
 								}
 							}
         		}
           }
+
           verseText.value = `<span>${verse}</span>. ${text}`;
         });
 	    },
@@ -153,7 +178,7 @@
 	    }
 		},
 		async beforeMount() {
-		  this.assignBookData();
+		  await this.assignDefaults();
 		  chapterListRef.value = await getAllChapters(bookRef, chapterRef);
 		  this.getVerse();
 		}

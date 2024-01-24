@@ -14,11 +14,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.10",
     "ant-design-vue": "^4.1.1",
     "bulma": "^0.9.4",
-    "graphql": "^16.8.1",
-    "graphql-tag": "^2.12.6",
+    "jsonata": "^2.0.3",
     "pinia": "^2.1.7",
     "v-collapse-it": "^0.1.0",
     "vue": "^3.3.10",
