@@ -2,7 +2,6 @@
 	import ChapterList from './ChapterList.vue';
   import dataSource from '../data/highlights.json';
   import indexSource from '../data/bible/Index.json';
-
 	defineProps<{
 	  bookData: Array<String>
 	}>()
@@ -22,14 +21,14 @@
 			  <div class="control">
 			    <div class="select">
 				    <select v-model="chapterRef" placeholder="Select" @change="handleChapter" v-on:change="setRefData" class="chapter-select">
-				      <option v-for="chapter in getChapters()" :label="handleChapterMarker(chapter, bookRef)" :value="chapter" />
+				      <option v-if="newBookRef.allChapters" v-for="chapter in newBookRef.allChapters" :label="handleChapterMarker(chapter, bookRef)" :value="chapter" />
 				    </select>
 				  </div>
 				</div>
 			  <div class="control">
 			    <div class="select">
 				    <select v-model="verseRef" placeholder="Select" @change="handleVerse" v-on:change="setRefData" class="verse-select">
-				      <option v-for="verse in getVerses()" :label="handleVerseMarker(verse, bookRef)" :value="verse" />
+				      <option v-if="newBookRef.allVerses" v-for="verse in newBookRef.allVerses" :label="handleVerseMarker(verse, bookRef)" :value="verse" />
 				    </select>
 				  </div>
 				</div>
@@ -62,20 +61,15 @@
 		getDefault,
 		getObjKeys
 	} from '../common/utils';
-	/**
-
-	New mapping concept
-
-	*/
 	const newBookRef = ref({
-		name: undefined,
-		chapter: undefined,
-		verse: undefined,
-		text: undefined,
-		all: undefined
+		bookName: undefined,
+		selectedChapter: undefined,
+		selectedVerse: undefined,
+		allChapters: undefined,
+		allVerses: undefined,
+		text: undefined
 	});
 	const bookRef = ref();
-	const limitRef = ref<any>();
 	const chapterRef = ref();
 	const verseRef = ref();
 	const verseText = ref();
@@ -85,23 +79,41 @@
 	  checked: false
 	});
 
+	/**
+		Get rid of limit next
+	*/
+
 	export default {
 		props: ['bookData'],
 		methods: {
+			/** Assign defaults */
 			async assignDefaults () {
 		    const expression = jsonata('$.Genesis');
 		    const chapters = await expression.evaluate(indexSource);
 
+		    newBookRef.value = {
+		    	bookName: 'Genesis',
+		    	selectedChapter: 1,
+		    	selectedVerse: 1,
+		    	allVerses: Array.from({ length: chapters['1'] }, (value, index) => index + 1),
+		    	allChapters: Array.from({ length: Object.keys(chapters).length }, (value, index) => index + 1)
+		    }
+
     		bookRef.value = 'Genesis';
     		chapterRef.value = 1;
     		verseRef.value = 1;
-    		limitRef.value = chapters;
 			},
+			/** Handle book */
 	    async handleBook(book: any) {
 		    const expression = jsonata('$keys(*)');
 		    const books = await expression.evaluate(indexSource);
 
-	      bookRef.value = book.target.value;
+		    let {
+		    	bookName,
+		    	selectedChapter,
+		    	selectedVerse,
+		    	allChapters	
+		    } = newBookRef.value;
 
 	      for (const i in indexSource) {
 	      	if (books[i] === book.target.value) {
@@ -109,25 +121,45 @@
 				    const expression = jsonata('$.`' + books[i] + '`');
 				    const chapters = await expression.evaluate(indexSource);
 
-	      		limitRef.value = chapters;
+	      		newBookRef.value.allChapters = Array.from({ length: Object.keys(chapters).length }, (value, index) => index + 1)
 	      	}
 	      }
 
-				chapterRef.value = this.getChapters()[0];
-				verseRef.value = this.getVerses()[0];
-				this.getVerse();
+	      bookRef.value = book.target.value;
+	      bookName = book.target.value;
+	      selectedChapter = 1;
+	      selectedVerse = 1;
+	      // allChapters = await getAllChapters(name, chapter);
+
+				chapterRef.value = 1;
+				verseRef.value = 1;
+				this.getText();
 				chapterListRef.value = await getAllChapters(bookRef, chapterRef);
 	    },
+	    /** Handle chapter */
 	    async handleChapter(event: any) {
+		    let {
+		    	bookName,
+		    	selectedChapter,
+		    	selectedVerse,
+		    	allChapters	
+		    } = newBookRef.value;
+
+	      selectedChapter = Number(event.target.value);
+	      selectedVerse = 1;
+
 	    	chapterRef.value = Number(event.target.value);
 	    	verseRef.value = 1;
-	    	this.getVerse();
+	    	this.getText();
+	    	// allChapters = await getAllChapters(name, chapter);
 	    	chapterListRef.value = await getAllChapters(bookRef, chapterRef);
 	    },
+	    /** Handle verse */
 	    handleVerse(event: any) {
 	    	verseRef.value = Number(event.target.value);
-	    	this.getVerse();
+	    	this.getText();
 	    },
+	    /** Get books */
 	    getBooks() {
 	    	const books = [];
 	    	for (const i in indexSource) {
@@ -135,22 +167,8 @@
 	    	}
 	    	return books;
 	    },
-	    getChapters() {
-	    	const chapters = [];	    	
-	    	for (const i in limitRef.value) {
-	    		chapters.push(Number(i));
-	    	}
-	    	return chapters;
-	    },
-	    getVerses() {
-	    	if(!chapterRef.value) return;
-	    	const verses = [];
-	    	for (let i = 0; i < limitRef.value[chapterRef.value]; i++) {
-	    		verses.push(i + 1);
-	    	}
-	    	return verses;
-	    },
-	    async getVerse () {
+			/** Get text */
+	    async getText () {
 	    	await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
         .then(async ({default: json}) => {
         	let verse;
@@ -177,10 +195,10 @@
 	    	this.$emit('set-ref-data', `${bookRef.value} ${chapterRef.value}:${verseRef.value}`);
 	    }
 		},
+		/** Before mount */
 		async beforeMount() {
 		  await this.assignDefaults();
-		  chapterListRef.value = await getAllChapters(bookRef, chapterRef);
-		  this.getVerse();
+		  this.getText();
 		}
 	}
 </script>
