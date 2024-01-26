@@ -11,22 +11,22 @@ const handleBookMarker = (book: any) => {
 	}
 	return marker;
 }
-const handleChapterMarker = (chapter: any, bookRef: any) => {
+const handleChapterMarker = (chapter: any, book: any) => {
 	let marker = chapter;
 	for (const i in dataSource) {
 		if (getRef(getObjKeys(dataSource[i])[0]).chapter === chapter
-			&& getRef(getObjKeys(dataSource[i])[0]).book === bookRef.value
-			&& marker.indexOf('*') === -1) {
+			&& getRef(getObjKeys(dataSource[i])[0]).book === book
+			&& marker.toString().indexOf('*') === -1) {
 			marker += ' *';
 		}
 	}
 	return marker;
 }
-const handleVerseMarker = (verse: any, bookRef: any) => {
+const handleVerseMarker = (verse: any, book: any) => {
 	let marker = verse;
 	for (const i in dataSource) {
 		if (getRef(getObjKeys(dataSource[i])[0]).verse === verse
-			&& getRef(getObjKeys(dataSource[i])[0]).book === bookRef.value
+			&& getRef(getObjKeys(dataSource[i])[0]).book === book
 			&& marker.toString().indexOf('*') === -1) {
 				marker += ' *';
 		}

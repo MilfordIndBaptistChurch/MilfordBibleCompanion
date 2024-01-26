@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	defineProps<{
-		chapterListRef: object,
+		chapter: array,
 	  showChapterState: {
 	  	checked: boolean
 	  }
@@ -10,7 +10,7 @@
 <template>
 	<a-list
 	item-layout="horizontal"
-	:data-source="chapterListRef"
+	:data-source="chapter"
 	size="small"
 	v-if="showChapterState.checked"
 	>
@@ -21,11 +21,11 @@
 	  >
 	    <template #title>
 	    	<h4 class="ant-list-item-meta-title">
-	    		<a href="">{{ item.verse.index }}</a>
+	    		<a href="">#{{ item.verse }}</a>
 	    	</h4>
 	    </template>
 	  </a-list-item-meta>
-	      {{ item.verse.text }}
+	      {{ item.text }}
 	  </a-list-item>
 	</template>
 	</a-list>

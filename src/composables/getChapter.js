@@ -1,9 +1,9 @@
-const getAllChapters = async (bookRef, chapterRef) => {
-	return await import(`../data/bible/${bookRef.value.replace(/\s/g, '')}.json`)
+const getChapter = async (bookName, selectedChapter) => {
+	return await import(`../data/bible/${bookName.replace(/\s/g, '')}.json`)
   .then(({default: json}) => {
   	let verses = [];
   	for (const i in json.chapters) {
-  		if(Number(json.chapters[i].chapter) === chapterRef.value) {
+  		if(Number(json.chapters[i].chapter) === selectedChapter) {
   			for (const j in json.chapters[i].verses) {
   				verses.push({
 						verse: {
@@ -19,5 +19,5 @@ const getAllChapters = async (bookRef, chapterRef) => {
 }
 
 export {
-  getAllChapters
+  getChapter
 }

@@ -1,6 +1,6 @@
 import {
-	getAllChapters
-} from '../composables/getAllChapters';
+	getChapter
+} from '../composables/getChapter';
 import {
 	handleBookMarker,
 	handleChapterMarker,
@@ -8,7 +8,7 @@ import {
 } from '../composables/handleMarker';
 
 export {
-	getAllChapters,
+	getChapter,
 	handleBookMarker,
 	handleChapterMarker,
 	handleVerseMarker

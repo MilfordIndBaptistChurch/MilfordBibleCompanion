@@ -8,7 +8,7 @@ const getRef = (bookRef) => {
 	return {
 		book,
 		chapter,
-		verse: bookRef.split(':')[1]
+		verse: Number(bookRef.split(':')[1])
 	}
 }
 
