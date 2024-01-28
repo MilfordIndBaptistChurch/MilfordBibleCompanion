@@ -108,6 +108,7 @@
 	      for (const i in indexSource) {
 	      	if (books[i] === book.target.value) {
 				    const chapters = await this.getJsonData('$.`' + books[i] + '`', indexSource);
+				    newBookRef.value.allVerses = Array.from({ length: chapters['1'] }, (value, index) => index + 1);
 	      		newBookRef.value.allChapters = Array.from({ length: Object.keys(chapters).length }, (value, index) => index + 1)
 	      	}
 	      }
@@ -120,8 +121,10 @@
 	    },
 	    /** Handle chapter */
 	    async handleChapter(event: any) {
+	    	const chapters = await this.getJsonData('$.`' + newBookRef.value.bookName + '`', indexSource);
 	      newBookRef.value.selectedChapter = Number(event.target.value);
 	      newBookRef.value.selectedVerse = 1;
+				newBookRef.value.allVerses = Array.from({ length: chapters[event.target.value] }, (value, index) => index + 1);
 	    	this.updateChapterText();
 	    },
 	    /** Handle verse */
@@ -147,21 +150,8 @@
 	    	if (!bookName) return;
 	    	await import(`../data/bible/${bookName.replace(/\s/g, '')}.json`)
         .then(async ({default: json}) => {
-        	const chaptersVerse = await this.getJsonData('$.*', json);
-        	let verseIndex;
-        	let verseText;
-
-        	for (const i in chaptersVerse) {
-        		if (Number(chaptersVerse[i].chapter) === selectedChapter) {
-        			for (const j in chaptersVerse[i].verses) {
-        				if (Number(chaptersVerse[i].verses[j].verse) === selectedVerse) {
-									verseIndex = chaptersVerse[i].verses[j].verse;
-									verseText = chaptersVerse[i].verses[j].text;
-								}
-							}
-        		}
-          }
-          newBookRef.value.text = `<span>${verseIndex}</span>. ${verseText}`;
+        	const passage = await this.getJsonData('$.chapters['+(selectedChapter-1)+'].verses['+(selectedVerse-1)+']', json);
+      		newBookRef.value.text = `<span>${passage.verse}</span>. ${passage.text}`;
         });
 	    },
 	    updateChapterText () {
