@@ -84,7 +84,6 @@
 			/** Assign defaults */
 			async assignDefaults () {
 		    const chapters = await this.getJsonData('$.Genesis', indexSource);
-
 		    newBookRef.value = {
 		    	bookName: 'Genesis',
 		    	selectedChapter: 1,
@@ -93,13 +92,11 @@
 		    	allVerses: Array.from({ length: chapters['1'] }, (value, index) => index + 1),
 		    	allChapters: Array.from({ length: Object.keys(chapters).length }, (value, index) => index + 1)
 		    }
-
 		    this.updateChapterText();
 			},
 			/** Handle book */
 	    async handleBook(book: any) {
 		    const books = await this.getJsonData('$keys(*)', indexSource);
-
 		    let {
 		    	bookName,
 		    	selectedChapter,
@@ -107,7 +104,6 @@
 		    	allChapters,
 		    	chapter
 		    } = newBookRef.value;
-
 	      for (const i in indexSource) {
 	      	if (books[i] === book.target.value) {
 				    const chapters = await this.getJsonData('$.`' + books[i] + '`', indexSource);
@@ -115,9 +111,7 @@
 	      		newBookRef.value.allChapters = Array.from({ length: Object.keys(chapters).length }, (value, index) => index + 1)
 	      	}
 	      }
-
 	      loading.value = true;
-
 	      bookName = book.target.value;
 	      newBookRef.value.selectedChapter = 1;
 	      newBookRef.value.selectedVerse = 1;
