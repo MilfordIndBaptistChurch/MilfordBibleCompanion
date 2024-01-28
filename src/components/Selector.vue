@@ -40,7 +40,8 @@
     </div>
 		<article v-if="!showChapterState.checked" class="message is-dark">
 		  <div class="message-body">
-		    <div v-html="newBookRef.text"></div>
+		  	<a-skeleton v-if="loading" active />
+		    <div v-if="!loading" v-html="newBookRef.text"></div>
 		  </div>
 		</article>
 		<ChapterList v-bind:chapter="newBookRef.chapter" v-bind:showChapterState="showChapterState" />
@@ -66,6 +67,8 @@
 		chapter: undefined,
 		text: undefined
 	});
+
+	const loading = ref(false);
 
 	const showChapterState = reactive({
 	  checked: false
@@ -113,6 +116,8 @@
 	      	}
 	      }
 
+	      loading.value = true;
+
 	      bookName = book.target.value;
 	      newBookRef.value.selectedChapter = 1;
 	      newBookRef.value.selectedVerse = 1;
@@ -151,6 +156,7 @@
 	    	await import(`../data/bible/${bookName.replace(/\s/g, '')}.json`)
         .then(async ({default: json}) => {
         	const passage = await this.getJsonData('$.chapters['+(selectedChapter-1)+'].verses['+(selectedVerse-1)+']', json);
+        	setTimeout(() => loading.value = false, 500);
       		newBookRef.value.text = `<span>${passage.verse}</span>. ${passage.text}`;
         });
 	    },
