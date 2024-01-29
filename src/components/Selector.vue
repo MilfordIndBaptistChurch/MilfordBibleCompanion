@@ -1,10 +1,6 @@
 <script setup lang="ts">
 	import ChapterList from './ChapterList.vue';
-  import dataSource from '../data/highlights.json';
   import indexSource from '../data/bible/Index.json';
-	defineProps<{
-	  bookData: Array<String>
-	}>()
 </script>
 
 <template>
@@ -62,17 +58,17 @@
 		handleChapterMarker,
 		handleVerseMarker
 	} from '../composables';
-	const bookRef = ref({
+	const bookRef = ref<any>({
 		name: 'Genesis',
 		selected: {
 			verse: 1,
 			chapter: 1
 		},
-		books: undefined,
-		chapters: undefined,
-		chapter: undefined,
-		verses: undefined,
-		text: undefined
+		books: {},
+		chapters: [],
+		chapter: [],
+		verses: [],
+		text: ''
 	});
 
 	const loading = ref(false);
@@ -89,7 +85,6 @@
 	}
 
 	export default {
-		props: ['bookData'],
 		methods: {
 			async assignDefaults () {
 		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
@@ -148,12 +143,12 @@
 	    /** Handle chapter */
 	    async handleChapter(event: any) {
 	    	selectedChapter.value =  event.target.value;
-	    	this.handleBook().then(resp => resp.chapter());
+	    	this.handleBook(undefined).then(resp => resp.chapter());
 	    },
 	    /** Handle verse */
 	    handleVerse(event: any) {
 	    	selectedVerse.value =  event.target.value;
-	    	this.handleBook().then(resp => resp.verse());
+	    	this.handleBook(undefined).then(resp => resp.verse());
 	    },
 	    /** Parent callback */
 	    setRefData () {

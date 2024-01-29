@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	defineProps<{
-		chapter: array,
+		chapter: Array<String>,
 	  showChapterState: {
 	  	checked: boolean
 	  }
