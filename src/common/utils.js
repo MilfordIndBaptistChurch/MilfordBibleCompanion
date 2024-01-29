@@ -1,3 +1,5 @@
+  import jsonata from 'jsonata';
+
 const getRef = (bookRef) => {
 	let book = bookRef.split(':')[0];
 	let chapter = bookRef.split(':')[0];
@@ -12,14 +14,6 @@ const getRef = (bookRef) => {
 	}
 }
 
-const getDefault = (bookModel) => {
-	return {
-		book: bookModel[0].book,
-		chapter: bookModel[0].chapters[0].chapter,
-		verse: bookModel[0].chapters[0].verses[0]
-	}
-}
-
 const getObjKeys = (value) => {
 	return Object.keys(value);
 }
@@ -30,9 +24,14 @@ const getUniqueValues = (array) => (
 	))
 )
 
+const getJsonData = async (string, source) => {
+  const expression = jsonata(string);
+  return await expression.evaluate(source);
+}
+
 export {
 	getRef,
-	getDefault,
 	getObjKeys,
-	getUniqueValues
+	getUniqueValues,
+	getJsonData
 }
