@@ -37,15 +37,22 @@
 		<article v-if="!showChapterState.checked" class="message is-dark">
 		  <div class="message-body">
 		  	<a-skeleton v-if="loading" active />
+		  	<a-tooltip :open="copied">
+		  		<template #title>Copied</template>
+		  		<div class="tooltip-1">
+		  			<font-awesome-icon icon="fa-far fa-copy" @click="copy(source)" />
+		  		</div>
+		  	</a-tooltip>
 		    <div v-if="!loading" v-html="bookRef.text"></div>
 		  </div>
 		</article>
-		<ChapterList v-bind:chapter="bookRef.chapter" v-bind:showChapterState="showChapterState" />
+		<ChapterList v-bind:bookRef="bookRef" v-bind:showChapterState="showChapterState" />
   </div>
 </template>
 
 <script lang="ts">
 	import { ref, reactive } from 'vue';
+	import { useClipboard } from '@vueuse/core'
 	import { getJsonData } from '../common/utils';
 	import {
 		getBooks,
@@ -58,6 +65,7 @@
 		handleChapterMarker,
 		handleVerseMarker
 	} from '../composables';
+
 	const bookRef = ref<any>({
 		name: 'Genesis',
 		selected: {
@@ -70,6 +78,13 @@
 		verses: [],
 		text: ''
 	});
+
+	const source = ref('');
+
+	const {
+		copy,
+		copied
+	} = useClipboard({ source })
 
 	const loading = ref(false);
 
@@ -135,6 +150,8 @@
 
 				await getChapterVerses(bookRef);
     		await getVerse(bookRef);
+
+    		source.value = bookRef.value.rawText;
 
     		setTimeout(() => loading.value = false, 500);
 

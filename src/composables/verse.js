@@ -11,8 +11,10 @@ const getVerse = async (bookRef) => {
 	if (!name) return;
 	await import(`../data/bible/${name.replace(/\s/g, '')}.json`)
 		.then(async ({default: json}) => {
+			const { name, selected } = bookRef.value;
 			const passage = await getJsonData('$.chapters['+(selected.chapter-1)+'].verses['+(selected.verse-1)+']', json);
-			bookRef.value.text = `<span>${passage.verse}</span>. ${passage.text}`;
+			bookRef.value.text = `${passage.verse}. ${passage.text}`;
+			bookRef.value.rawText = `${name} ${selected.chapter}:${passage.verse} - ${passage.text}`;
 		});
 }
 

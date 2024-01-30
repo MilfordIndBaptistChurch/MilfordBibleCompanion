@@ -66,10 +66,28 @@ h4 {
 
 .message.is-dark {
 	margin: 25px 0 0 0 !important;
-
+	
 	.message-body {
+		position: relative;
 		font-size: 30px !important;
 	}
+}
+
+.tooltip-1 {
+	position: absolute;
+	top: 25px;
+	right: 25px;
+	font-size: 28px;
+	color: #1890ff;
+	cursor: pointer;
+}
+
+.tooltip-2 {
+	display: inline-block;
+	margin: 0 0 0 10px;
+	font-size: 16px;
+	color: #1890ff;
+	cursor: pointer;
 }
 
 .list {
