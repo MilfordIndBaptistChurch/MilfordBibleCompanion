@@ -58,18 +58,26 @@ h4 {
 	width: 75px;
 }
 
-.show-chapter {
+.show-chapter,
+.show-cf {
 	margin: 0 7px 0 0;
 	font-size: 14px;
 	color: #a0a0a0;
 }
 
-.message.is-dark {
+.message.is-dark,
+.message.is-info {
 	margin: 25px 0 0 0 !important;
 	
 	.message-body {
 		position: relative;
 		font-size: 30px !important;
+	}
+}
+
+.message.is-info {
+	.message-body {
+		font-size: 22px !important;
 	}
 }
 

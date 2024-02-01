@@ -1,6 +1,8 @@
 <script setup lang="ts">
 	import ChapterList from './ChapterList.vue';
+	import Study from '../components/Study.vue';
   import indexSource from '../data/bible/Index.json';
+  import dataSource from '../data/highlights.json';
 </script>
 
 <template>
@@ -32,6 +34,10 @@
 					<span class="show-chapter">Show chapter</span>
 					<a-switch v-model:checked="showChapterState.checked" />
 				</div>
+				<div class="control columns is-vcentered">
+					<span class="show-cf">Show cf</span>
+					<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
+				</div>
 			</div>
     </div>
 		<article v-if="!showChapterState.checked" class="message is-dark">
@@ -47,11 +53,27 @@
 		  </div>
 		</article>
 		<ChapterList v-bind:bookRef="bookRef" v-bind:showChapterState="showChapterState" />
+    <div v-for="items in dataSource">
+        <div v-for="item in items[`${bookRef.name} ${bookRef.selected.chapter}:${bookRef.selected.verse}` as keyof typeof items]">
+          <div v-if="Array.isArray(item)" v-for="(studyRef, i) in item">
+            <Study v-bind:index="i" v-bind:highlight="studyRef.highlight" v-bind:methods="studyRef.methods" />
+          </div>
+        </div>
+  	</div>
+		<article v-if="showCFState.checked && crossRef" class="message is-info">
+			<div class="message-header">
+		    <p>Cross References (cf.)</p>
+		  </div>
+			<div class="message-body">
+				<div v-html="crossRef"></div>
+			</div>
+		</article>
   </div>
 </template>
 
 <script lang="ts">
 	import { ref, reactive } from 'vue';
+	import router from '../router'
 	import { useClipboard } from '@vueuse/core'
 	import { getJsonData } from '../common/utils';
 	import {
@@ -79,6 +101,8 @@
 		text: ''
 	});
 
+	const crossRef = ref('');
+
 	const source = ref('');
 
 	const {
@@ -95,12 +119,49 @@
 	  checked: false
 	});
 
+	const showCFState = reactive({
+	  checked: true
+	});
+
 	const constants = {
 		GENESIS: 'Genesis'
 	}
 
 	export default {
 		methods: {
+			firstLetterUppercase(book) {
+				return book.charAt(0).toUpperCase() + book.slice(1);
+			},
+			async setPathConfig () {
+				const path = router.currentRoute.value.path;
+				const book = path.replace(/\//g, '').split('-');
+
+				let newBook = {};
+
+				if (book.length > 3) {
+					newBook = {
+						name: `${book[0]} ${this.firstLetterUppercase(book[1])}`,
+						chapter: Number(book[2]), 
+						verse: Number(book[3])
+					}
+				} else {
+					newBook = {
+						name: this.firstLetterUppercase(book[0]),
+						chapter: Number(book[1]), 
+						verse: Number(book[2])
+					}
+				}
+
+		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
+		    bookRef.value.name = newBook.name;
+		    bookRef.value.selected.chapter = newBook.chapter;
+		    bookRef.value.selected.verse = newBook.verse;
+	      bookRef.value.chapters = await getChapters(newBook.name);
+	      bookRef.value.chapter = await getChapter(newBook.name, newBook.chapter);
+ 				bookRef.value.verses = await getVerses(newBook.name, newBook.chapter);
+				this.handleBook();
+				this.setRefData();
+			},
 			async assignDefaults () {
 		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
 		    const newBook = { target: { value: constants.GENESIS } };
@@ -120,9 +181,12 @@
 						verse: 1,
 						chapter: 1
 		      };
+
 		      newModel.chapters = await getChapters(newBook);
-		      newModel.chapter = await getChapter(newBook, 1);
-	 				newModel.verses = await getVerses(newBook);
+		      newModel.chapter = await getChapter(newModel.name, 1);
+	 				newModel.verses = await getVerses(newModel.name, 1);
+
+      		router.push({ path: '/' });
 
 		      bookRef.value = newModel;
 	    	}
@@ -131,10 +195,10 @@
 					async chapter () {
 						const { name } = bookRef.value;
 			      bookRef.value.selected = {
-			      	chapter: selectedChapter,
+			      	chapter: selectedChapter.value,
 			      	verse: 1
 			      }
-						bookRef.value.verses = await getVerses(name);
+						bookRef.value.verses = await getVerses(name, selectedChapter.value);
 						return this;
 					},
 					async verse () {
@@ -148,6 +212,10 @@
 					}
 				}
 
+				crossRef.value = '';
+
+				this.handleCF();
+
 				await getChapterVerses(bookRef);
     		await getVerse(bookRef);
 
@@ -157,15 +225,34 @@
 
 				return methods;
 			},
+			/** Handle disabled */
+			handleDisabled () {
+				return crossRef.value === '';
+			},
+			/** Handle CF */
+			async handleCF () {
+				const { name, selected: { chapter, verse } } = bookRef.value;
+				if (!name) return;
+				await import(`../data/cf/${name.replace(/\s/g, '')}.json`)
+					.then(async ({default: json}) => {
+						for (let i in json) {
+							if (json[i].ref === `${chapter}:${verse}`) {
+								crossRef.value = json[i].cf.join(', ');
+							}
+						}
+					});
+			},
 	    /** Handle chapter */
 	    async handleChapter(event: any) {
 	    	selectedChapter.value =  event.target.value;
 	    	this.handleBook(undefined).then(resp => resp.chapter());
+    		router.push({ path: '/' });	
 	    },
 	    /** Handle verse */
 	    handleVerse(event: any) {
 	    	selectedVerse.value =  event.target.value;
 	    	this.handleBook(undefined).then(resp => resp.verse());
+    		router.push({ path: '/' });
 	    },
 	    /** Parent callback */
 	    setRefData () {
@@ -175,6 +262,10 @@
 		},
 		/** Before mount */
 		async beforeMount() {
+			const path = router.currentRoute.value.path;
+			if (path && path !== '/') {
+				return await this.setPathConfig();
+			}
 		  await this.assignDefaults();
 		}
 	}
