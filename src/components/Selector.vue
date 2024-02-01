@@ -38,6 +38,10 @@
 					<span class="show-cf">Show cf</span>
 					<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
 				</div>
+				<div class="control columns is-vcentered">
+					<span class="show-images">Show images</span>
+					<a-switch v-model:checked="showImagesState.checked" />
+				</div>
 			</div>
     </div>
 		<article v-if="!showChapterState.checked" class="message is-dark">
@@ -68,6 +72,57 @@
 				<div v-html="crossRef"></div>
 			</div>
 		</article>
+    <div v-if="showImagesState.checked" style="padding:0 50px 0 0; margin: 25px 0 0 0">
+      <div class="tabs">
+        <ul>
+          <li class="is-active"><a>Images</a></li>
+        </ul>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Jerusalem-Grabeskirche-14-vom_Erloeserkirchturm-2010-gje.jpg/800px-Jerusalem-Grabeskirche-14-vom_Erloeserkirchturm-2010-gje.jpg" alt="">
+              </figure>
+            </div>
+            <footer class="card-footer">
+              <a class="card-footer-item">
+                Holy Land Sites
+              </a>
+            </footer>
+          </div>
+        </div>
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://www.c4israel.org.nz/wp-content/uploads-pcvi0001/2021/03/shutterstock_356008508.jpeg" alt="">
+              </figure>
+            </div>
+            <footer class="card-footer">
+              <a class="card-footer-item">
+                Holy Land Sites
+              </a>
+            </footer>
+          </div>
+        </div>  
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://enterthebible.org/wp-content/uploads/2021/07/OT-6_Ancient_NearEast.jpg" alt="">
+              </figure>
+            </div>
+            <footer class="card-footer">
+              <a class="card-footer-item">
+                Bible Map
+              </a>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -123,20 +178,28 @@
 	  checked: true
 	});
 
+	const showImagesState = reactive({
+	  checked: true
+	});
+
 	const constants = {
 		GENESIS: 'Genesis'
 	}
 
 	export default {
 		methods: {
-			firstLetterUppercase(book) {
+			firstLetterUppercase(book: any) {
 				return book.charAt(0).toUpperCase() + book.slice(1);
 			},
 			async setPathConfig () {
 				const path = router.currentRoute.value.path;
 				const book = path.replace(/\//g, '').split('-');
 
-				let newBook = {};
+				let newBook = {
+					name: '',
+					chapter: 1,
+					verse: 1
+				};
 
 				if (book.length > 3) {
 					newBook = {
@@ -159,7 +222,7 @@
 	      bookRef.value.chapters = await getChapters(newBook.name);
 	      bookRef.value.chapter = await getChapter(newBook.name, newBook.chapter);
  				bookRef.value.verses = await getVerses(newBook.name, newBook.chapter);
-				this.handleBook();
+				this.handleBook(undefined);
 				this.setRefData();
 			},
 			async assignDefaults () {
