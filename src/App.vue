@@ -6,7 +6,7 @@
 </script>
 
 <template>
-	<a-layout style="height: 100%;background: none">
+	<a-layout style="height: 100%; background: none;">
 		<a-layout-header>
 	    <div class="logo">
 	    	<a href="/" style="color: #ffffff">

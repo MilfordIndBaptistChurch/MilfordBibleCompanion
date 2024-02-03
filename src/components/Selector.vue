@@ -72,7 +72,7 @@
 				<div v-html="crossRef"></div>
 			</div>
 		</article>
-    <div v-if="showImagesState.checked" style="padding:0 50px 0 0; margin: 25px 0 0 0">
+    <div v-if="showImagesState.checked" style="margin: 25px 0 0 0">
       <div class="tabs">
         <ul>
           <li class="is-active"><a>Images</a></li>
@@ -123,6 +123,7 @@
         </div>
       </div>
     </div>
+    <div style="height: 50px">&nbsp;</div>
   </div>
 </template>
 
@@ -225,6 +226,12 @@
 				this.handleBook(undefined);
 				this.setRefData();
 			},
+			updateRoute () {
+				router.push(
+					{ path:
+						`${bookRef.value.name.replace(/\s/g, '-')}-${bookRef.value.selected.chapter}-${bookRef.value.selected.verse}`
+				});
+			},
 			async assignDefaults () {
 		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
 		    const newBook = { target: { value: constants.GENESIS } };
@@ -248,8 +255,6 @@
 		      newModel.chapters = await getChapters(newBook);
 		      newModel.chapter = await getChapter(newModel.name, 1);
 	 				newModel.verses = await getVerses(newModel.name, 1);
-
-      		router.push({ path: '/' });
 
 		      bookRef.value = newModel;
 	    	}
@@ -282,6 +287,8 @@
 				await getChapterVerses(bookRef);
     		await getVerse(bookRef);
 
+    		this.updateRoute();
+
     		source.value = bookRef.value.rawText;
 
     		setTimeout(() => loading.value = false, 500);
@@ -309,13 +316,13 @@
 	    async handleChapter(event: any) {
 	    	selectedChapter.value =  event.target.value;
 	    	this.handleBook(undefined).then(resp => resp.chapter());
-    		router.push({ path: '/' });	
+    		this.updateRoute();
 	    },
 	    /** Handle verse */
 	    handleVerse(event: any) {
 	    	selectedVerse.value =  event.target.value;
 	    	this.handleBook(undefined).then(resp => resp.verse());
-    		router.push({ path: '/' });
+    		this.updateRoute();
 	    },
 	    /** Parent callback */
 	    setRefData () {
