@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import Badge from './Badge.vue';
 	defineProps<{
 	  booksCount: number,
 	  crossRefCount: number,

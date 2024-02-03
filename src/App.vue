@@ -1,6 +1,7 @@
 <script setup lang="ts">
-	import { RouterLink, RouterView } from 'vue-router'
-	import SideNav from './components/SideNav.vue'
+	import { RouterLink, RouterView } from 'vue-router';
+	import { GithubOutlined } from '@ant-design/icons-vue';
+	import SideNav from './components/SideNav.vue';
   import dataSource from './data/highlights.json';
 </script>
 
@@ -8,7 +9,9 @@
 	<a-layout style="height: 100%;background: none">
 		<a-layout-header>
 	    <div class="logo">
-	    	Milford Bible Companion
+	    	<a href="/" style="color: #ffffff">
+	    		Milford Bible Companion
+	    	</a>
 	    </div>
 	    <a-menu
 	      theme="dark"
@@ -21,7 +24,7 @@
 		    	</a>
 		  	</a-menu-item>
 		    <a-menu-item key="2">
-		    	<a href="https://www.mbiblestudygroup.co/about" target="_blank">
+		    	<a href="https://www.mbiblestudygroup.co/tools" target="_blank">
 		    		About
 		    	</a>
 		    </a-menu-item>
@@ -31,6 +34,12 @@
 		    	</a>
 		    </a-menu-item>
 	    </a-menu>
+			<a href="https://github.com/MilfordIndBaptistChurch/MilfordBibleCompanion"
+				target="_blank"
+				style="position: absolute; font-size: 35px; top: 0; right: 25px; color: #ffffff"
+			>
+				<GithubOutlined />
+			</a>
 	  </a-layout-header>
 		<a-layout style="height: 100%;background: none">
 		  <a-layout-content style="padding: 0 50px;">
