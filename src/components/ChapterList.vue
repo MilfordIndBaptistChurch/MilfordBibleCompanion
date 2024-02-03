@@ -16,7 +16,7 @@
 	style="margin: 25px 0 0 0"
 	>
 	<template #renderItem="{ item }">
-	  <a-list-item v-if="Number(bookRef.selected.verse) === Number(item.verse)" class="list" style="background: #eff5fb">
+	  <a-list-item v-if="Number(bookRef.selected.verse) === Number(item.verse)" class="list" style="background: #fafafa">
 		  <a-list-item-meta>
 		    <template #title>
 		    	<h4 class="ant-list-item-meta-title">
@@ -30,7 +30,7 @@
 		    	</h4>
 		    </template>
 		  </a-list-item-meta>
-    	{{ item.text }}{{ bookRef.selected.verse === Number(item.verse) }}
+    	{{ item.text }} <StarFilled />
 	  </a-list-item>
 		<a-list-item v-if="Number(bookRef.selected.verse) !== Number(item.verse)" class="list">
 		  <a-list-item-meta>
@@ -46,7 +46,7 @@
 		    	</h4>
 		    </template>
 		  </a-list-item-meta>
-    	{{ item.text }}{{ bookRef.selected.verse }} {{ Number(item.verse) }}
+    	{{ item.text }}
 	  </a-list-item>
 	</template>
 	</a-list>
@@ -55,6 +55,7 @@
 <script lang="ts">
 	import { ref } from 'vue';
 	import { useClipboard } from '@vueuse/core'
+	import { StarFilled } from '@ant-design/icons-vue';
 
 	const source = ref('');
 

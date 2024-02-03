@@ -64,7 +64,7 @@
           </div>
         </div>
   	</div>
-		<article v-if="showCFState.checked && crossRef" class="message is-info">
+		<article v-if="showCFState.checked && crossRef" class="message is-dark cf">
 			<div class="message-header">
 		    <p>Cross References (cf.)</p>
 		  </div>
@@ -296,7 +296,7 @@
 			async handleCF () {
 				const { name, selected: { chapter, verse } } = bookRef.value;
 				if (!name) return;
-				await import(`../data/cf/${name.replace(/\s/g, '')}.json`)
+				await import(`../data/extras/${name.replace(/\s/g, '')}.json`)
 					.then(async ({default: json}) => {
 						for (let i in json) {
 							if (json[i].ref === `${chapter}:${verse}`) {

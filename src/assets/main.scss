@@ -38,7 +38,7 @@ h4 {
 }
 
 .side-nav {
-	background: #f9f9f9;
+	background: #fafafa;
 	width: 100%;
 	height: 100%;
 	padding: 2rem 25px 25px 25px;
@@ -64,19 +64,22 @@ h4 {
 	color: #a0a0a0;
 }
 
-.message.is-dark,
-.message.is-info {
+.message.is-dark {
 	margin: 25px 0 0 0 !important;
 	
 	.message-body {
 		position: relative;
+		background: #ffffff;
 		font-size: 30px !important;
+		border: 1px solid #dbdbdb;
+		border-left: 3px solid #363636;
 	}
 }
 
-.message.is-info {
+.message.is-dark.cf {
 	.message-body {
 		font-size: 22px !important;
+		border-left: 1px solid #dbdbdb;
 	}
 }
 
@@ -103,6 +106,11 @@ h4 {
 
 .menu-list li a {
 	font-size: 14px;
+}
+
+:where(.css-dev-only-do-not-override-19yxfbp).ant-layout .ant-layout-header,
+:where(.css-dev-only-do-not-override-19yxfbp).ant-menu-dark {
+	background: #c84869;
 }
 
 .collapse {

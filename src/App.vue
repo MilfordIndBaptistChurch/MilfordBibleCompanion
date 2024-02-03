@@ -6,7 +6,7 @@
 
 <template>
 	<a-layout style="height: 100%;background: none">
-		<a-layout-header class="header">
+		<a-layout-header>
 	    <div class="logo">
 	    	Milford Bible Companion
 	    </div>

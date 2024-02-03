@@ -35,11 +35,5 @@
 		    <li><a>Notes (0)</a></li>
 		  </ul>
 		</aside>
-		<div>
-	    <Badge type="vuejs" />
-	    <Badge type="typescript" />
-	    <Badge type="github" />
-	    <Badge type="kingjames" />
-	  </div>
 	</div>
 </template>
