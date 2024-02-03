@@ -1,23 +1,50 @@
 <script setup lang="ts">
 	import { RouterLink, RouterView } from 'vue-router'
-	import Header from './components/Header.vue'
 	import SideNav from './components/SideNav.vue'
   import dataSource from './data/highlights.json';
 </script>
 
 <template>
-	<div class="grid">
-		<div>&nbsp;</div>
-		<div class="middle">
-	    <Header title="Milford Bible Companion" />
-			<RouterView />
-		</div>
-		<SideNav
-			:booksCount="bookCount"
-			:crossRefCount="crossRefCount"
-			:charactersCount="charactersCount"
-		/>
-	</div>
+	<a-layout style="height: 100%;background: none">
+		<a-layout style="height: 100%;background: none">
+			<a-layout-header class="header">
+		    <div class="logo">
+		    	Milford Bible Companion
+		    </div>
+		    <a-menu
+		      theme="dark"
+		      mode="horizontal"
+		      :style="{ lineHeight: '64px' }"
+		    >
+			    <a-menu-item key="1">
+			    	<a href="https://www.mbiblestudygroup.co" target="_blank">
+			    		MBSG
+			    	</a>
+			  	</a-menu-item>
+			    <a-menu-item key="2">
+			    	<a href="https://www.mbiblestudygroup.co/about" target="_blank">
+			    		About
+			    	</a>
+			    </a-menu-item>
+			    <a-menu-item key="3">
+			    	<a href="https://www.mbiblestudygroup.co/contact" target="_blank">
+			    		Contact
+			    	</a>
+			    </a-menu-item>
+		    </a-menu>
+		  </a-layout-header>
+		  <a-layout-content style="padding: 0 50px;">
+	  		<RouterView />
+			</a-layout-content>
+		</a-layout>
+		<a-layout-sider style="background: none">
+			<SideNav
+				:booksCount="bookCount"
+				:crossRefCount="crossRefCount"
+				:charactersCount="charactersCount"
+			/>
+		</a-layout-sider>
+	</a-layout>
 </template>
 
 <script lang="ts">

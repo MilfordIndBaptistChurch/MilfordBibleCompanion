@@ -35,19 +35,18 @@
 </template>
 
 <style scoped>
-
   .badge {
     display: inline-flex;
+    margin: 0 0 8px 0;
     align-items: center;
     width: 110px;
-    margin: 0 0 0 12px;
     background: #007acc;
     border-radius: 4px;
     border: 1px solid #007acc;
   }
 
   .badge__vuejs {
-    margin: 0;
+    margin: 0 0 8px 0;
     background: #41b883;
     border: 1px solid #41b883;
   }

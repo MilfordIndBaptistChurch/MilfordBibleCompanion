@@ -1,14 +1,15 @@
 <script setup lang="ts">
+	import Badge from './Badge.vue';
 	defineProps<{
 	  booksCount: number,
 	  crossRefCount: number,
 	  charactersCount: number
 	}>()
-</script>	
+</script>
 
 <template>
 	<div class="side-nav">
-		<aside class="menu">
+		<aside class="menu" style="margin: 0 0 25px 0">
 		  <p class="menu-label">
 		    General
 		  </p>
@@ -34,5 +35,11 @@
 		    <li><a>Notes (0)</a></li>
 		  </ul>
 		</aside>
+		<div>
+	    <Badge type="vuejs" />
+	    <Badge type="typescript" />
+	    <Badge type="github" />
+	    <Badge type="kingjames" />
+	  </div>
 	</div>
 </template>
