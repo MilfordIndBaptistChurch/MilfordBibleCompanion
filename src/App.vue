@@ -6,44 +6,44 @@
 
 <template>
 	<a-layout style="height: 100%;background: none">
+		<a-layout-header class="header">
+	    <div class="logo">
+	    	Milford Bible Companion
+	    </div>
+	    <a-menu
+	      theme="dark"
+	      mode="horizontal"
+	      :style="{ lineHeight: '64px' }"
+	    >
+		    <a-menu-item key="1">
+		    	<a href="https://www.mbiblestudygroup.co" target="_blank">
+		    		MBSG
+		    	</a>
+		  	</a-menu-item>
+		    <a-menu-item key="2">
+		    	<a href="https://www.mbiblestudygroup.co/about" target="_blank">
+		    		About
+		    	</a>
+		    </a-menu-item>
+		    <a-menu-item key="3">
+		    	<a href="https://www.mbiblestudygroup.co/contact" target="_blank">
+		    		Contact
+		    	</a>
+		    </a-menu-item>
+	    </a-menu>
+	  </a-layout-header>
 		<a-layout style="height: 100%;background: none">
-			<a-layout-header class="header">
-		    <div class="logo">
-		    	Milford Bible Companion
-		    </div>
-		    <a-menu
-		      theme="dark"
-		      mode="horizontal"
-		      :style="{ lineHeight: '64px' }"
-		    >
-			    <a-menu-item key="1">
-			    	<a href="https://www.mbiblestudygroup.co" target="_blank">
-			    		MBSG
-			    	</a>
-			  	</a-menu-item>
-			    <a-menu-item key="2">
-			    	<a href="https://www.mbiblestudygroup.co/about" target="_blank">
-			    		About
-			    	</a>
-			    </a-menu-item>
-			    <a-menu-item key="3">
-			    	<a href="https://www.mbiblestudygroup.co/contact" target="_blank">
-			    		Contact
-			    	</a>
-			    </a-menu-item>
-		    </a-menu>
-		  </a-layout-header>
 		  <a-layout-content style="padding: 0 50px;">
 	  		<RouterView />
-			</a-layout-content>
+  		</a-layout-content>
+			<a-layout-sider style="background: none">
+				<SideNav
+					:booksCount="bookCount"
+					:crossRefCount="crossRefCount"
+					:charactersCount="charactersCount"
+				/>
+			</a-layout-sider>
 		</a-layout>
-		<a-layout-sider style="background: none">
-			<SideNav
-				:booksCount="bookCount"
-				:crossRefCount="crossRefCount"
-				:charactersCount="charactersCount"
-			/>
-		</a-layout-sider>
 	</a-layout>
 </template>
 

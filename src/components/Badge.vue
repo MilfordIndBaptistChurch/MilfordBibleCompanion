@@ -39,7 +39,7 @@
     display: inline-flex;
     margin: 0 0 8px 0;
     align-items: center;
-    width: 110px;
+    width: 120px;
     background: #007acc;
     border-radius: 4px;
     border: 1px solid #007acc;
