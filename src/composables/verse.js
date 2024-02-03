@@ -9,7 +9,7 @@ const getVerses = async (bookName, selectedChapter) => {
 
 const getVerse = async (bookRef) => {
 	const regex = /\*(.*?)\*/g;
-	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #ffd60a;">$1</span>`;
+	const spanTags = `<span style="display: inline;padding: 4px 7px;background: #FFEE88;">$1</span>`;
 	let { name, selected } = bookRef.value;
 	if (!name) return;
 	await import(`../data/bible/${name.replace(/\s/g, '')}.json`)
