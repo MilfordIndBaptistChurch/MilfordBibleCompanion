@@ -56,6 +56,21 @@
 		    <div v-if="!loading" v-html="bookRef.text"></div>
 		  </div>
 		</article>
+	  <a-row style="margin: 20px 0 0 0">
+	    <a-col :span="12">
+				<UpCircleOutlined style="margin-right: 5px; font-size: 28px; color: #bfbfbf" />
+				<DownCircleOutlined style="font-size: 28px; color: #bfbfbf" />
+	    </a-col>
+	    <a-col :span="12" style="text-align: right">
+			    <a-tag color="pink">Book</a-tag>
+			    <a-tag color="red">Context</a-tag>
+			    <a-tag color="orange">Audience</a-tag>
+			    <a-tag color="green">Dispensation</a-tag>
+			    <a-tag color="cyan">Geography</a-tag>
+			    <a-tag color="blue">Questions</a-tag>
+			    <a-tag color="purple">Lesson</a-tag>
+	    </a-col>
+	  </a-row>
 		<ChapterList v-bind:bookRef="bookRef" v-bind:showChapterState="showChapterState" />
     <div v-for="items in dataSource">
         <div v-for="item in items[`${bookRef.name} ${bookRef.selected.chapter}:${bookRef.selected.verse}` as keyof typeof items]">
@@ -130,6 +145,7 @@
 <script lang="ts">
 	import { ref, reactive } from 'vue';
 	import router from '../router'
+	import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons-vue';
 	import { useClipboard } from '@vueuse/core'
 	import { getJsonData } from '../common/utils';
 	import {
