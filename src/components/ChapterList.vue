@@ -20,11 +20,12 @@
 		  <a-list-item-meta>
 		    <template #title>
 		    	<h4 class="ant-list-item-meta-title">
-		    		<a href="">#{{ item.verse }}</a>
+		    		<a href="">#{{ item.verse.indexOf('{') === -1 ? item.verse : '' }}</a>
 				  	<a-tooltip :open="isOpen(item)">
 				  		<template #title>Copied</template>
 				  		<div class="tooltip-2">
 				  			<font-awesome-icon icon="fa-far fa-copy" @click="handleCopy(item)" />
+				  			}
 				  		</div>
 				  	</a-tooltip>
 		    	</h4>

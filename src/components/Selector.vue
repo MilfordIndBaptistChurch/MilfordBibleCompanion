@@ -11,7 +11,7 @@
 			<div class="field has-addons">
 			  <div class="control">
 			    <div class="select">
-				    <select v-model="bookRef.name" placeholder="Select" @change="handleBook" v-on:change="setRefData" class="book-select">
+				    <select v-model="bookRef.name" placeholder="Select" @change="() => handleBook({target: { value: bookRef.name }}).then(resp => resp.rest())" v-on:change="setRefData" class="book-select">
 				      <option v-if="bookRef.books" v-for="book in bookRef.books" :label="handleBookMarker(book)" :value="book" />
 				    </select>
 				  </div>
@@ -45,7 +45,7 @@
 			</div>
     </div>
 		<article v-if="!showChapterState.checked" class="message is-dark">
-		  <div class="message-body">
+		  <div class="message-body" style="min-height: 175px;">
 		  	<a-skeleton v-if="loading" active />
 		  	<a-tooltip :open="copied">
 		  		<template #title>Copied</template>
@@ -56,12 +56,13 @@
 		    <div v-if="!loading" v-html="bookRef.text"></div>
 		  </div>
 		</article>
+		<ChapterList v-bind:bookRef="bookRef" v-bind:showChapterState="showChapterState" />
 	  <a-row style="margin: 20px 0 0 0">
 	    <a-col :span="12">
-				<UpCircleOutlined style="margin-right: 5px; font-size: 28px; color: #bfbfbf" />
-				<DownCircleOutlined style="font-size: 28px; color: #bfbfbf" />
+				<UpCircleOutlined @click="() => nextPassage('up')" style="cursor: pointer; margin-right: 5px; font-size: 28px; color: #bfbfbf" />
+				<DownCircleOutlined @click="() => nextPassage('down')" style="cursor: pointer; font-size: 28px; color: #bfbfbf" />
 	    </a-col>
-	    <a-col :span="12" style="text-align: right">
+	    <a-col :span="12" style="text-align: right; user-select: none;">
 			    <a-tag color="pink">Book</a-tag>
 			    <a-tag color="red">Context</a-tag>
 			    <a-tag color="orange">Audience</a-tag>
@@ -71,7 +72,6 @@
 			    <a-tag color="purple">Lesson</a-tag>
 	    </a-col>
 	  </a-row>
-		<ChapterList v-bind:bookRef="bookRef" v-bind:showChapterState="showChapterState" />
     <div v-for="items in dataSource">
         <div v-for="item in items[`${bookRef.name} ${bookRef.selected.chapter}:${bookRef.selected.verse}` as keyof typeof items]">
           <div v-if="Array.isArray(item)" v-for="(studyRef, i) in item">
@@ -93,7 +93,7 @@
           <li class="is-active"><a>Images</a></li>
         </ul>
       </div>
-      <div class="columns is-multiline">
+      <div class="columns is-multiline" style="user-select: none;">
         <div class="column is-one-quarter-desktop is-half-tablet">
           <div class="card">
             <div class="card-image">
@@ -138,7 +138,7 @@
         </div>
       </div>
     </div>
-    <div style="height: 50px">&nbsp;</div>
+    <div style="height: 50px; user-select: none;">&nbsp;</div>
   </div>
 </template>
 
@@ -221,7 +221,7 @@
 				if (book.length > 3) {
 					newBook = {
 						name: `${book[0]} ${this.firstLetterUppercase(book[1])}`,
-						chapter: Number(book[2]), 
+						chapter: Number(book[2]),
 						verse: Number(book[3])
 					}
 				} else {
@@ -239,7 +239,7 @@
 	      bookRef.value.chapters = await getChapters(newBook.name);
 	      bookRef.value.chapter = await getChapter(newBook.name, newBook.chapter);
  				bookRef.value.verses = await getVerses(newBook.name, newBook.chapter);
-				this.handleBook(undefined);
+				this.handleBook(undefined).then(resp => resp.rest());
 				this.setRefData();
 			},
 			updateRoute () {
@@ -251,7 +251,22 @@
 			async assignDefaults () {
 		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
 		    const newBook = { target: { value: constants.GENESIS } };
-				this.handleBook(newBook);
+				this.handleBook(newBook).then(resp => resp.rest());
+			},
+			async nextPassage (direction: string) {
+				const chapterLength = bookRef.value.verses.length;
+				const selectedVerse = Number(bookRef.value.selected.verse);
+				let value = { target: { value: 0 } };
+				if (direction === 'up' && selectedVerse < chapterLength + 1) {
+					value.target.value = selectedVerse - 1;
+				} else if (direction === 'down' && selectedVerse > 0
+					&& selectedVerse !== chapterLength) {
+					value.target.value = selectedVerse + 1;
+				}
+				if (value.target.value > 0) {
+					this.handleVerse(value);
+					this.handleBook(undefined).then(resp => resp.rest());
+				}
 			},
 			/** Handle book */
 			async handleBook (bookValue: any) {
@@ -275,6 +290,8 @@
 		      bookRef.value = newModel;
 	    	}
 
+	    	const _this = this;
+
 				const methods = {
 					async chapter () {
 						const { name } = bookRef.value;
@@ -285,29 +302,30 @@
 						bookRef.value.verses = await getVerses(name, selectedChapter.value);
 						return this;
 					},
-					async verse () {
+					verse () {
 				    bookRef.value = Object.assign(bookRef.value, {
 				    	selected: {
 				    		chapter: bookRef.value.selected.chapter,
-				    		verse: selectedVerse
+				    		verse: selectedVerse.value
 				    	}
 				    });
 						return this;
+					},
+					async rest () {
+						crossRef.value = '';
+
+						_this.handleCF();
+
+						await getChapterVerses(bookRef);
+		    		await getVerse(bookRef);
+
+		    		_this.updateRoute();
+
+		    		source.value = bookRef.value.rawText;
+
+		    		setTimeout(() => loading.value = false, 500);
 					}
 				}
-
-				crossRef.value = '';
-
-				this.handleCF();
-
-				await getChapterVerses(bookRef);
-    		await getVerse(bookRef);
-
-    		this.updateRoute();
-
-    		source.value = bookRef.value.rawText;
-
-    		setTimeout(() => loading.value = false, 500);
 
 				return methods;
 			},
@@ -331,14 +349,12 @@
 	    /** Handle chapter */
 	    async handleChapter(event: any) {
 	    	selectedChapter.value =  event.target.value;
-	    	this.handleBook(undefined).then(resp => resp.chapter());
-    		this.updateRoute();
+	    	this.handleBook(undefined).then(resp => { resp.chapter(); resp.rest(); });
 	    },
 	    /** Handle verse */
-	    handleVerse(event: any) {
+	    async handleVerse(event: any) {
 	    	selectedVerse.value =  event.target.value;
-	    	this.handleBook(undefined).then(resp => resp.verse());
-    		this.updateRoute();
+	    	this.handleBook(undefined).then(resp => { resp.verse(); resp.rest(); });
 	    },
 	    /** Parent callback */
 	    setRefData () {
