@@ -50,9 +50,10 @@ async function jsonData (bookRef) {
 function loopElements () {
 	elems.forEach(async (item) => {
 	  var bookRef = item.innerHTML;
+	  var getBookRef = getRef(bookRef);
 	  var jsonResults = await jsonData(bookRef);
 	  var theme = item.dataset.theme;
-	  var url = `https://mbiblecompanion.co/${bookRef.book}-${bookRef.chapter}-${bookRef.verse}`;
+	  var url = `https://mbiblecompanion.co/${getBookRef.book}-${getBookRef.chapter}-${getBookRef.verse}`;
 	  if (theme === 'dark') {
 		  item.classList.add('dark');
 		}
