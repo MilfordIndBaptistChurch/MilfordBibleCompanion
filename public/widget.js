@@ -52,12 +52,13 @@ function loopElements () {
 	  var bookRef = item.innerHTML;
 	  var jsonResults = await jsonData(bookRef);
 	  var theme = item.dataset.theme;
+	  var url = `https://mbiblecompanion.co/${bookRef.book}-${bookRef.chapter}-${bookRef.verse}`;
 	  if (theme === 'dark') {
 		  item.classList.add('dark');
 		}
 		  item.innerHTML = `
 			  <p>
-			  	<a href="https://mbiblecompanion.co" target="_blank">
+			  	<a href="${url}" target="_blank">
 			  		<b>${bookRef} KJV</b>
 			  	</a>
 			  </p>
