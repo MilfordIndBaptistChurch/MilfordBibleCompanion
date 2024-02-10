@@ -18,7 +18,7 @@ function appendCSS() {
   let css = document.createElement('link');
   css.rel = 'stylesheet';
   css.media = 'all';
-  css.href = 'http://localhost:5173/widget.css';
+  css.href = 'https://mbiblecompanion.co/widget.css';
 
   document.getElementsByTagName('head')[0].appendChild(css);
 }
