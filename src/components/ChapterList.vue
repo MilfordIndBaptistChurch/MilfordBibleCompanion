@@ -25,7 +25,6 @@
 				  		<template #title>Copied</template>
 				  		<div class="tooltip-2">
 				  			<font-awesome-icon icon="fa-far fa-copy" @click="handleCopy(item)" />
-				  			}
 				  		</div>
 				  	</a-tooltip>
 		    	</h4>

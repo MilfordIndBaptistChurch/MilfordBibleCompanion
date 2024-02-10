@@ -1,0 +1,54 @@
+.mbc-widget {
+	background: #fff;
+	padding: 20px;
+	margin: 0 0 25px 0;
+	width: 450px;
+	min-height: 170px;
+	color: #000;
+	font-size: 18px;
+	line-height: 30px;
+	text-align: left;
+	border-radius: 25px;
+	border: 1px solid #d6d6d6;
+	filter: drop-shadow(1px 1px 2px #a8a8a8);
+}
+
+.mbc-widget p {
+	font-family: Arial;
+}
+
+.mbc-widget p a {
+	color: #000;
+	text-decoration: none;
+}
+
+.mbc-widget p a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+.mbc-widget p:last-child {
+	font-family: Times New Roman;
+	font-size: 22px;
+	color: #000;
+}
+
+.mbc-widget.dark {
+	background: #000;
+	color: #fff;
+	border: 0;
+}
+
+.mbc-widget.dark p {
+	color: #fff;
+}
+
+.mbc-widget.dark p a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.mbc-widget.dark p a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
