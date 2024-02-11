@@ -29,6 +29,11 @@
 		    	</a>
 		    </a-menu-item>
 		    <a-menu-item key="3">
+		    	<a href="https://www.mbiblestudygroup.co/add-widget" target="_blank">
+		    		Add Widget
+		    	</a>
+		    </a-menu-item>
+		    <a-menu-item key="4">
 		    	<a href="https://www.mbiblestudygroup.co/contact" target="_blank">
 		    		Contact
 		    	</a>
