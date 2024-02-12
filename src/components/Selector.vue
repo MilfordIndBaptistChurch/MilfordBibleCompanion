@@ -67,7 +67,7 @@
 			    <a-tag color="red">Context</a-tag>
 			    <a-tag color="orange">Audience</a-tag>
 			    <a-tag color="green">Dispensation</a-tag>
-			    <a-tag color="cyan">Geography</a-tag>
+			    <a-tag color="cyan">Sermons</a-tag>
 			    <a-tag color="blue">Questions</a-tag>
 			    <a-tag color="purple">Lesson</a-tag>
 	    </a-col>
@@ -145,6 +145,7 @@
 <script lang="ts">
 	import { ref, reactive } from 'vue';
 	import router from '../router'
+	import { useHead } from '@vueuse/head'
 	import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons-vue';
 	import { useClipboard } from '@vueuse/core'
 	import { getJsonData } from '../common/utils';
@@ -170,7 +171,8 @@
 		chapters: [],
 		chapter: [],
 		verses: [],
-		text: ''
+		text: '',
+		rawText: ''
 	});
 
 	const crossRef = ref('');
@@ -323,6 +325,17 @@
 
 		    		source.value = bookRef.value.rawText;
 
+				    useHead({
+				      title: `
+				      	Milford Bible Companion - ${bookRef.value.name} ${bookRef.value.selected.chapter}:${bookRef.value.selected.verse}`,
+					      meta: [
+					        {
+					          name: 'description',
+					          content: `${bookRef.value.rawText}`,
+						        },
+					        ]
+				    })
+
 		    		setTimeout(() => loading.value = false, 500);
 					}
 				}
@@ -368,6 +381,7 @@
 			if (path && path !== '/') {
 				return await this.setPathConfig();
 			}
+
 		  await this.assignDefaults();
 		}
 	}
