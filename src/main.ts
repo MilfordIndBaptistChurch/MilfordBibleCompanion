@@ -6,21 +6,25 @@ import VCollapse from 'v-collapse-it';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as regularFaStar } from '@fortawesome/free-regular-svg-icons';
 
-const head = createHead()
+import App from './App.vue';
+import router from './router';
 
-library.add(faCopy)
+const pinia = createPinia();
+const head = createHead();
 
-import App from './App.vue'
-import router from './router'
+library.add(faCopy);
+library.add(faStar);
+library.add(regularFaStar);
 
-const app = createApp(App)
+const app = createApp(App);
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(createPinia())
 app.use(head)
 app.use(router)
+app.use(pinia)
 app.use(Antd)
 app.use(VCollapse)
 

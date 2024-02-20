@@ -30,8 +30,17 @@
 				    </select>
 				  </div>
 				</div>
+				<!-- Split into separate component -->
+				<a-button v-if="favIconClicked" type="primary" shape="circle" :size="size" @click="handleFav"
+					style="position: relative; margin: 7px 9px 0 2px; min-width: 28px; height: 27px;">
+					<font-awesome-icon class="fav-icon" icon="fa-fas fa-star" style="position: absolute; top: 5px; left: 4.5px;" />	
+      	</a-button>
+				<a-button v-if="!favIconClicked" shape="circle" :size="size" @click="handleFav"
+					style="position: relative; margin: 7px 9px 0 2px; min-width: 28px; height: 27px;">
+					<font-awesome-icon class="fav-icon" icon="fa-regular fa-star" style="position: absolute; margin: auto; top: -1px; left: 0; bottom: 0; right: 0;" />
+      	</a-button>
 				<div class="control columns is-vcentered">
-					<span class="show-chapter">Show chapter</span>
+					<span class="show-chapter">Show ch.</span>
 					<a-switch v-model:checked="showChapterState.checked" />
 				</div>
 				<div class="control columns is-vcentered">
@@ -39,7 +48,7 @@
 					<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
 				</div>
 				<div class="control columns is-vcentered">
-					<span class="show-images">Show images</span>
+					<span class="show-images">Show img</span>
 					<a-switch v-model:checked="showImagesState.checked" />
 				</div>
 			</div>
@@ -67,7 +76,7 @@
 			    <a-tag color="red">Context</a-tag>
 			    <a-tag color="orange">Audience</a-tag>
 			    <a-tag color="green">Dispensation</a-tag>
-			    <a-tag color="cyan">Sermons</a-tag>
+			    <a-tag color="cyan" @click="openSermons" style="cursor: pointer">Sermons</a-tag>
 			    <a-tag color="blue">Questions</a-tag>
 			    <a-tag color="purple">Lesson</a-tag>
 	    </a-col>
@@ -148,7 +157,8 @@
 	import { useHead } from '@vueuse/head'
 	import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons-vue';
 	import { useClipboard } from '@vueuse/core'
-	import { getJsonData } from '../common/utils';
+	import { useDrawerStore } from '../stores/drawer'
+	import { getJsonData, getUniqueValues } from '../common/utils';
 	import {
 		getBooks,
 		getChapters,
@@ -186,8 +196,10 @@
 
 	const loading = ref(false);
 
+	const favIconClicked = ref(false);
 	const selectedChapter = ref(undefined);
 	const selectedVerse = ref(undefined);
+	const localStorageFav = ref([]);
 
 	const showChapterState = reactive({
 	  checked: false
@@ -247,8 +259,12 @@
 			updateRoute () {
 				router.push(
 					{ path:
-						`${bookRef.value.name.replace(/\s/g, '-')}-${bookRef.value.selected.chapter}-${bookRef.value.selected.verse}`
+						`/${bookRef.value.name.replace(/\s/g, '-')}-${bookRef.value.selected.chapter}-${bookRef.value.selected.verse}`
 				});
+			},
+			openSermons () {
+				const drawer = useDrawerStore();
+				drawer.setOpenState(true);
 			},
 			async assignDefaults () {
 		    bookRef.value.books = await getJsonData('$keys(*)', indexSource);
@@ -321,6 +337,17 @@
 						await getChapterVerses(bookRef);
 		    		await getVerse(bookRef);
 
+		    		const getFav = JSON.parse(localStorage.getItem('fav'));
+
+		    		favIconClicked.value = false;
+
+		    		for (const i in getFav) {
+		    			const newBookRef = getFav[i].split(' - ')[0];
+		    			if (newBookRef === `${bookRef.value.name} ${bookRef.value.selected.chapter}:${bookRef.value.selected.verse}`) {
+		    				favIconClicked.value = true;
+		    			}
+		    		}
+
 		    		_this.updateRoute();
 
 		    		source.value = bookRef.value.rawText;
@@ -341,6 +368,14 @@
 				}
 
 				return methods;
+			},
+			handleFav () {
+				const newLocalStorageFav = [...localStorageFav.value];
+				newLocalStorageFav.push(bookRef.value.rawText);
+				const uniqueValues  = getUniqueValues(newLocalStorageFav as []);
+				localStorageFav.value = uniqueValues;
+				localStorage.setItem('fav', JSON.stringify(localStorageFav.value));
+				favIconClicked.value = true;
 			},
 			/** Handle disabled */
 			handleDisabled () {
@@ -381,7 +416,7 @@
 			if (path && path !== '/') {
 				return await this.setPathConfig();
 			}
-
+			localStorageFav.value = localStorage.getItem('fav') || [];
 		  await this.assignDefaults();
 		}
 	}

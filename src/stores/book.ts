@@ -1,5 +1,4 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { useUserStore } from './user'
 
 export const useBookStore = defineStore({
   id: 'book',

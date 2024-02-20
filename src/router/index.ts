@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StudyView from '../views/StudyView.vue'
+import FavView from '../views/FavView.vue'
 
 const commonRouteProperties = { component: StudyView }
 
@@ -8,14 +9,18 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      ...commonRouteProperties,
       name: 'study',
-      component: StudyView
+      ...commonRouteProperties
     },
 		{
       path: '/:ref',
       name: 'studyRef',
       ...commonRouteProperties
+    },
+    {
+      path: '/fav',
+      name: 'fav',
+      component: FavView
     }
   ]
 })
