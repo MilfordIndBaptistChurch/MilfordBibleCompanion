@@ -416,7 +416,7 @@
 			if (path && path !== '/') {
 				return await this.setPathConfig();
 			}
-			localStorageFav.value = localStorage.getItem('fav') || [];
+			localStorageFav.value = JSON.parse(localStorage.getItem('fav')) || [];
 		  await this.assignDefaults();
 		}
 	}
