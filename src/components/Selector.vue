@@ -30,28 +30,49 @@
 				    </select>
 				  </div>
 				</div>
-				<!-- Split into separate component -->
 				<a-button v-if="favIconClicked" type="primary" shape="circle" :size="size" @click="handleFav"
 					style="position: relative; margin: 7px 9px 0 2px; min-width: 28px; height: 27px;">
-					<font-awesome-icon class="fav-icon" icon="fa-fas fa-star" style="position: absolute; top: 5px; left: 4.5px;" />	
-      	</a-button>
+					<font-awesome-icon class="fav-icon" icon="fa-fas fa-star" style="position: absolute; top: 5px; left: 4.5px;" />
+				</a-button>
 				<a-button v-if="!favIconClicked" shape="circle" :size="size" @click="handleFav"
 					style="position: relative; margin: 7px 9px 0 2px; min-width: 28px; height: 27px;">
 					<font-awesome-icon class="fav-icon" icon="fa-regular fa-star" style="position: absolute; margin: auto; top: -1px; left: 0; bottom: 0; right: 0;" />
       	</a-button>
-				<div class="control columns is-vcentered">
-					<span class="show-chapter">Show ch.</span>
-					<a-switch v-model:checked="showChapterState.checked" />
-				</div>
-				<div class="control columns is-vcentered">
-					<span class="show-cf">Show cf</span>
-					<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
-				</div>
-				<div class="control columns is-vcentered">
-					<span class="show-images">Show img</span>
-					<a-switch v-model:checked="showImagesState.checked" />
+				<!-- Split into separate component -->
+				<div class="field has-addons toggle-controls-desktop">
+					<div class="control columns is-vcentered">
+						<span class="show-chapter">Show ch.</span>
+						<a-switch v-model:checked="showChapterState.checked" />
+					</div>
+					<div class="control columns is-vcentered">
+						<span class="show-cf">Show cf</span>
+						<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
+					</div>
+					<div class="control columns is-vcentered">
+						<span class="show-images">Show img</span>
+						<a-switch v-model:checked="showImagesState.checked" />
+					</div>
 				</div>
 			</div>
+			<a-row class="toggle-controls-mobile">
+				<a-col class="gutter-row" :xs="{ span: 24 }">
+					<!-- Split into separate component -->
+					<div class="field has-addons">
+						<div class="control columns is-vcentered">
+							<span class="show-chapter">Show ch.</span>
+							<a-switch v-model:checked="showChapterState.checked" />
+						</div>
+						<div class="control columns is-vcentered">
+							<span class="show-cf">Show cf</span>
+							<a-switch v-model:checked="showCFState.checked" :disabled="handleDisabled()" />
+						</div>
+						<div class="control columns is-vcentered">
+							<span class="show-images">Show img</span>
+							<a-switch v-model:checked="showImagesState.checked" />
+						</div>
+					</div>
+				</a-col>
+			</a-row>
     </div>
 		<article v-if="!showChapterState.checked" class="message is-dark">
 		  <div class="message-body" style="min-height: 175px;">

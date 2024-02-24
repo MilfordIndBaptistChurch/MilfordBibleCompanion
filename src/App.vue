@@ -90,7 +90,7 @@
 		  <a-layout-content style="padding: 0 50px;">
 	  		<RouterView />
   		</a-layout-content>
-			<a-layout-sider style="height: 100%; background: none">
+			<a-layout-sider class="a-layout-sider" style="height: 100%; background: none">
 				<SideNav
 					:booksCount="bookCount"
 					:crossRefCount="crossRefCount"

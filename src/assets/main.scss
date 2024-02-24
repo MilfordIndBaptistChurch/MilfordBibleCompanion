@@ -45,6 +45,12 @@ h4 {
 	padding: 2rem 25px 25px 25px;
 }
 
+@media (max-width: 1200px) {
+  .a-layout-sider {
+    display: none;
+  }
+}
+
 .control {
 	margin: 0 10px 0 0 !important;
 }
@@ -55,6 +61,20 @@ h4 {
 
 .chapter-select, .verse-select {
 	width: 75px;
+}
+
+.toggle-controls-mobile {
+	display: none;
+}
+
+@media (max-width: 830px) {
+	.toggle-controls-desktop {
+		display: none !important;
+	}
+	.toggle-controls-mobile {
+		margin: 22px 0 0 0;
+		display: block;
+	}
 }
 
 .show-chapter,
